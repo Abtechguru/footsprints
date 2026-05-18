@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F7F3E6;
+  --foreground: #1D1D1D;
+  --primary: #FD630A;
+  --primary-hover: #e05304;
+  --secondary: #DAA35D;
+  --dark: #1D1D1D;
+  --light: #FFFFFF;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-dark: var(--dark);
+  --color-light: var(--light);
+  --font-sans: 'General Sans', sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  scrollbar-width: thin;
+  scrollbar-color: #1D1D1D #F7F3E6;
+}
+
+/* Base utility classes for smooth animations */
+.transition-custom {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1D1D1D;
+  border-radius: 20px;
+  border: 2px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FD630A;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
