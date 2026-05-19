@@ -39,7 +39,7 @@ interface SavedReceipt {
   created_at: string;
 }
 
-export default function ReceiptClient({ products, initialReceipts }: { products: any[]; initialReceipts: SavedReceipt[] }) {
+export default function ReceiptClient({ products, initialReceipts, isMasterAdmin }: { products: any[]; initialReceipts: SavedReceipt[]; isMasterAdmin: boolean }) {
   const [receiptsList, setReceiptsList] = useState<SavedReceipt[]>(initialReceipts);
   
   const [buyerName, setBuyerName] = useState("John Doe");
@@ -188,6 +188,11 @@ export default function ReceiptClient({ products, initialReceipts }: { products:
   };
 
   const handleSaveReceipt = async () => {
+    if (!isMasterAdmin) {
+      alert("Unauthorized: Only a Master Admin is permitted to save or edit receipt records.");
+      return;
+    }
+
     setStatus("loading");
     setMessage("");
 
@@ -196,7 +201,6 @@ export default function ReceiptClient({ products, initialReceipts }: { products:
       setStatus("success");
       setMessage("Receipt saved successfully in the database!");
       
-      // Update local listing list
       const exists = receiptsList.find((r) => r.receipt_no === receiptNo);
       if (exists) {
         setReceiptsList(receiptsList.map((r) => (r.receipt_no === receiptNo ? res.receipt : r)));
@@ -218,15 +222,17 @@ export default function ReceiptClient({ products, initialReceipts }: { products:
     setPayments(receipt.payments);
     setFootnotes(receipt.footnotes || "");
     
-    // Clear any messages
     setStatus("idle");
     setMessage("");
-    
-    // Scroll smoothly to generator form
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleDeleteReceipt = async (id: string) => {
+    if (!isMasterAdmin) {
+      alert("Unauthorized: Only a Master Admin is permitted to delete receipt records.");
+      return;
+    }
+
     if (!confirm("Are you sure you want to delete this receipt from the database?")) return;
     
     const res = await deleteReceipt(id);
@@ -433,7 +439,7 @@ export default function ReceiptClient({ products, initialReceipts }: { products:
 
         {/* Live Receipt Preview - 6 Columns */}
         <div className="xl:col-span-6 space-y-6">
-          <div className="bg-[#1D1D1D] p-8 rounded-xl shadow-xl text-white no-print space-y-6">
+          <div className="bg-[#1D1D1D] p-8 rounded-xl shadow-xl text-white space-y-6 no-print">
             <h2 className="text-2xl font-bold mb-4">Receipt Controls</h2>
             <p className="text-white/70 leading-relaxed text-sm">
               Deliver this receipt to your customer's inbox, print/save it, or securely save/update it in the database.
@@ -449,14 +455,20 @@ export default function ReceiptClient({ products, initialReceipts }: { products:
                 <span>Email Customer</span>
               </button>
 
-              <button
-                type="button"
-                onClick={handleSaveReceipt}
-                className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 transition-colors text-white font-bold py-3.5 rounded-lg text-xs uppercase tracking-wider"
-              >
-                <Save size={16} />
-                <span>Save to Database</span>
-              </button>
+              {isMasterAdmin ? (
+                <button
+                  type="button"
+                  onClick={handleSaveReceipt}
+                  className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 transition-colors text-white font-bold py-3.5 rounded-lg text-xs uppercase tracking-wider"
+                >
+                  <Save size={16} />
+                  <span>Save to Database</span>
+                </button>
+              ) : (
+                <div className="text-center text-xs text-red-400 font-bold bg-red-500/10 border border-red-500/20 p-2.5 rounded-lg col-span-1 md:col-span-1">
+                  ⚠️ Database saving restricted to Master Admin.
+                </div>
+              )}
 
               <button
                 type="button"
@@ -481,110 +493,120 @@ export default function ReceiptClient({ products, initialReceipts }: { products:
           </div>
 
           {/* Live Document Box - Matches the GoDaddy format! */}
-          <div id="print-receipt-area" className="bg-white p-8 rounded-xl shadow-sm border border-[#1D1D1D]/10 text-[#1D1D1D] font-sans overflow-x-auto min-w-[700px] xl:min-w-0">
+          <div id="print-receipt-area" className="bg-white p-8 rounded-xl shadow-sm border border-[#1D1D1D]/10 text-[#1D1D1D] font-sans overflow-x-auto min-w-[700px] xl:min-w-0 relative">
             
-            {/* Header */}
-            <div className="flex justify-between items-center border-b-2 border-[#FD630A] pb-6 mb-8">
-              <div>
-                <h1 className="text-2xl font-black tracking-tight text-[#1D1D1D] leading-none">
-                  Footprints<span className="text-[#FD630A]">Energy</span>
-                </h1>
-                <p className="text-[10px] text-[#1D1D1D]/50 uppercase tracking-widest mt-1.5 font-bold flex items-center gap-1">
-                  <ShieldCheck size={12} className="text-[#FD630A]" /> Global Trade & Commodity Logistics
-                </p>
+            {/* Elegant Watermark Background */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none z-0">
+              <div className="text-center transform -rotate-12">
+                <h1 className="text-7xl font-black tracking-tight leading-none text-[#1D1D1D]">FootprintsEnergy</h1>
+                <p className="text-lg uppercase tracking-widest font-black mt-2 text-[#FD630A]">Global Commodities & Energy</p>
               </div>
-              <div className="text-right">
-                <h2 className="text-xl font-bold text-[#1D1D1D]/40 uppercase tracking-widest leading-none mb-2">RECEIPT</h2>
-                <div className="text-xs space-y-0.5 text-[#1D1D1D]/75 font-medium">
-                  <div><span className="font-bold text-[#1D1D1D]">Receipt ID:</span> {receiptNo}</div>
-                  <div><span className="font-bold text-[#1D1D1D]">Date:</span> {receiptDate}</div>
+            </div>
+
+            <div className="relative z-10">
+              {/* Header */}
+              <div className="flex justify-between items-center border-b-2 border-[#FD630A] pb-6 mb-8">
+                <div>
+                  <h1 className="text-2xl font-black tracking-tight text-[#1D1D1D] leading-none">
+                    Footprints<span className="text-[#FD630A]">Energy</span>
+                  </h1>
+                  <p className="text-[10px] text-[#1D1D1D]/50 uppercase tracking-widest mt-1.5 font-bold flex items-center gap-1">
+                    <ShieldCheck size={12} className="text-[#FD630A]" /> Global Trade & Commodity Logistics
+                  </p>
+                </div>
+                <div className="text-right">
+                  <h2 className="text-xl font-bold text-[#1D1D1D]/40 uppercase tracking-widest leading-none mb-2">RECEIPT</h2>
+                  <div className="text-xs space-y-0.5 text-[#1D1D1D]/75 font-medium">
+                    <div><span className="font-bold text-[#1D1D1D]">Receipt ID:</span> {receiptNo}</div>
+                    <div><span className="font-bold text-[#1D1D1D]">Date:</span> {receiptDate}</div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Billed To Recipient Info */}
-            <div className="mb-8 bg-[#F7F3E6]/60 p-4 rounded-lg border border-[#1D1D1D]/5">
-              <div className="text-[10px] font-bold text-[#FD630A] uppercase tracking-wider mb-1">Billed To</div>
-              <div className="font-bold text-sm text-[#1D1D1D]">{buyerName}</div>
-              <div className="text-xs text-[#1D1D1D]/60 mt-0.5">{buyerEmail}</div>
-            </div>
+              {/* Billed To Recipient Info */}
+              <div className="mb-8 bg-[#F7F3E6]/60 p-4 rounded-lg border border-[#1D1D1D]/5">
+                <div className="text-[10px] font-bold text-[#FD630A] uppercase tracking-wider mb-1">Billed To</div>
+                <div className="font-bold text-sm text-[#1D1D1D]">{buyerName}</div>
+                <div className="text-xs text-[#1D1D1D]/60 mt-0.5">{buyerEmail}</div>
+              </div>
 
-            {/* Charges and Credits */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-black text-[#1D1D1D] uppercase tracking-wider">Charges and Credits:</h3>
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-[#7F7F7F] text-white font-bold">
-                    <th className="p-2 border border-[#7F7F7F]">Date</th>
-                    <th className="p-2 border border-[#7F7F7F]">Type</th>
-                    <th className="p-2 border border-[#7F7F7F]">Product Type</th>
-                    <th className="p-2 border border-[#7F7F7F]">Product Name</th>
-                    <th className="p-2 border border-[#7F7F7F]">Term</th>
-                    <th className="p-2 border border-[#7F7F7F] text-right">Amount</th>
-                    <th className="p-2 border border-[#7F7F7F] text-right">Tax</th>
-                    <th className="p-2 border border-[#7F7F7F]">Tax Type</th>
-                    <th className="p-2 border border-[#7F7F7F] text-right">Total Charges</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {charges.map((item) => {
-                    const total = Number(item.amount) + Number(item.tax);
-                    return (
-                      <tr key={item.id} className="hover:bg-[#F7F3E6]/20 transition-colors border-b border-gray-200">
-                        <td className="p-2 border-r border-gray-200">{item.date}</td>
-                        <td className="p-2 border-r border-gray-200">{item.type}</td>
-                        <td className="p-2 border-r border-gray-200">{item.productType}</td>
-                        <td className="p-2 border-r border-gray-200 font-bold">{item.productName}</td>
-                        <td className="p-2 border-r border-gray-200">{item.term}</td>
-                        <td className="p-2 border-r border-gray-200 text-right">USD{Number(item.amount).toFixed(2)}</td>
-                        <td className="p-2 border-r border-gray-200 text-right">USD{Number(item.tax).toFixed(2)}</td>
-                        <td className="p-2 border-r border-gray-200">{item.taxType}</td>
-                        <td className="p-2 text-right font-bold">USD{total.toFixed(2)}</td>
-                      </tr>
-                    );
-                  })}
-                  {/* Total Row */}
-                  <tr className="bg-gray-50 font-bold border-t-2 border-gray-400">
-                    <td colSpan={7} className="p-2 text-right text-xs uppercase tracking-wider text-gray-500">Total Invoice Amount</td>
-                    <td colSpan={2} className="p-2 text-right text-sm text-[#FD630A] font-black">USD{subtotalCharges.toFixed(2)}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            {/* Payments */}
-            <div className="space-y-3 mt-8">
-              <h3 className="text-sm font-black text-[#1D1D1D] uppercase tracking-wider">Payments:</h3>
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-[#7F7F7F] text-white font-bold">
-                    <th className="p-2 border border-[#7F7F7F]">Date</th>
-                    <th className="p-2 border border-[#7F7F7F]">Order Number</th>
-                    <th className="p-2 border border-[#7F7F7F]">Payment Method</th>
-                    <th className="p-2 border border-[#7F7F7F]">Check/Card#/PayPal ID</th>
-                    <th className="p-2 border border-[#7F7F7F] text-right">Total Payments</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {payments.map((pmt) => (
-                    <tr key={pmt.id} className="hover:bg-[#F7F3E6]/20 transition-colors border-b border-gray-200">
-                      <td className="p-2 border-r border-gray-200">{pmt.date}</td>
-                      <td className="p-2 border-r border-gray-200">{pmt.orderNo}</td>
-                      <td className="p-2 border-r border-gray-200 font-bold">{pmt.method}</td>
-                      <td className="p-2 border-r border-gray-200">{pmt.details}</td>
-                      <td className="p-2 text-right font-bold">USD{Number(pmt.total).toFixed(2)}</td>
+              {/* Charges and Credits */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-black text-[#1D1D1D] uppercase tracking-wider">Charges and Credits:</h3>
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-[#7F7F7F] text-white font-bold">
+                      <th className="p-2 border border-[#7F7F7F]">Date</th>
+                      <th className="p-2 border border-[#7F7F7F]">Type</th>
+                      <th className="p-2 border border-[#7F7F7F]">Product Type</th>
+                      <th className="p-2 border border-[#7F7F7F]">Product Name</th>
+                      <th className="p-2 border border-[#7F7F7F]">Term</th>
+                      <th className="p-2 border border-[#7F7F7F] text-right">Amount</th>
+                      <th className="p-2 border border-[#7F7F7F] text-right">Tax</th>
+                      <th className="p-2 border border-[#7F7F7F]">Tax Type</th>
+                      <th className="p-2 border border-[#7F7F7F] text-right">Total Charges</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {charges.map((item) => {
+                      const total = Number(item.amount) + Number(item.tax);
+                      return (
+                        <tr key={item.id} className="hover:bg-[#F7F3E6]/20 transition-colors border-b border-gray-200">
+                          <td className="p-2 border-r border-gray-200">{item.date}</td>
+                          <td className="p-2 border-r border-gray-200">{item.type}</td>
+                          <td className="p-2 border-r border-gray-200">{item.productType}</td>
+                          <td className="p-2 border-r border-gray-200 font-bold">{item.productName}</td>
+                          <td className="p-2 border-r border-gray-200">{item.term}</td>
+                          <td className="p-2 border-r border-gray-200 text-right">USD{Number(item.amount).toFixed(2)}</td>
+                          <td className="p-2 border-r border-gray-200 text-right">USD{Number(item.tax).toFixed(2)}</td>
+                          <td className="p-2 border-r border-gray-200">{item.taxType}</td>
+                          <td className="p-2 text-right font-bold">USD{total.toFixed(2)}</td>
+                        </tr>
+                      );
+                    })}
+                    {/* Total Row */}
+                    <tr className="bg-gray-50 font-bold border-t-2 border-gray-400">
+                      <td colSpan={7} className="p-2 text-right text-xs uppercase tracking-wider text-gray-500">Total Invoice Amount</td>
+                      <td colSpan={2} className="p-2 text-right text-sm text-[#FD630A] font-black">USD{subtotalCharges.toFixed(2)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-            {/* Notes */}
-            <div className="border-t border-gray-300 mt-10 pt-4">
-              <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Please Note:</h4>
-              <p className="text-[10px] text-gray-400 font-medium leading-relaxed whitespace-pre-line">
-                {footnotes}
-              </p>
+              {/* Payments */}
+              <div className="space-y-3 mt-8">
+                <h3 className="text-sm font-black text-[#1D1D1D] uppercase tracking-wider">Payments:</h3>
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-[#7F7F7F] text-white font-bold">
+                      <th className="p-2 border border-[#7F7F7F]">Date</th>
+                      <th className="p-2 border border-[#7F7F7F]">Order Number</th>
+                      <th className="p-2 border border-[#7F7F7F]">Payment Method</th>
+                      <th className="p-2 border border-[#7F7F7F]">Check/Card#/PayPal ID</th>
+                      <th className="p-2 border border-[#7F7F7F] text-right">Total Payments</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {payments.map((pmt) => (
+                      <tr key={pmt.id} className="hover:bg-[#F7F3E6]/20 transition-colors border-b border-gray-200">
+                        <td className="p-2 border-r border-gray-200">{pmt.date}</td>
+                        <td className="p-2 border-r border-gray-200">{pmt.orderNo}</td>
+                        <td className="p-2 border-r border-gray-200 font-bold">{pmt.method}</td>
+                        <td className="p-2 border-r border-gray-200">{pmt.details}</td>
+                        <td className="p-2 text-right font-bold">USD{Number(pmt.total).toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Notes */}
+              <div className="border-t border-gray-300 mt-10 pt-4">
+                <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Please Note:</h4>
+                <p className="text-[10px] text-gray-400 font-medium leading-relaxed whitespace-pre-line">
+                  {footnotes}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -625,12 +647,16 @@ export default function ReceiptClient({ products, initialReceipts }: { products:
                   >
                     Load & Edit
                   </button>
-                  <button
-                    onClick={() => handleDeleteReceipt(rec.id)}
-                    className="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 bg-red-50 rounded"
-                  >
-                    Delete
-                  </button>
+                  {isMasterAdmin ? (
+                    <button
+                      onClick={() => handleDeleteReceipt(rec.id)}
+                      className="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 bg-red-50 rounded"
+                    >
+                      Delete
+                    </button>
+                  ) : (
+                    <span className="text-[10px] text-[#1D1D1D]/30 italic font-bold">Locked</span>
+                  )}
                 </td>
               </tr>
             ))}

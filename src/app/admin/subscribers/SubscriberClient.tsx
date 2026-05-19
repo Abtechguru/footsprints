@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Copy, Check, ExternalLink, Send } from "lucide-react";
-import { sendNewsletter } from "@/app/actions";
+import { Mail, Copy, Check, ExternalLink, Trash2 } from "lucide-react";
+import { sendNewsletter, deleteSubscriber } from "@/app/actions";
 import SubmitButton from "@/components/SubmitButton";
 
 interface Subscriber {
@@ -11,12 +11,13 @@ interface Subscriber {
   created_at: string;
 }
 
-export default function SubscriberClient({ subscribers }: { subscribers: Subscriber[] }) {
+export default function SubscriberClient({ subscribers, isMasterAdmin }: { subscribers: Subscriber[]; isMasterAdmin: boolean }) {
+  const [subscribersList, setSubscribersList] = useState<Subscriber[]>(subscribers);
   const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const emailListString = subscribers.map((s) => s.email).join(",");
+  const emailListString = subscribersList.map((s) => s.email).join(",");
 
   const handleCopyBCC = () => {
     navigator.clipboard.writeText(emailListString);
@@ -31,12 +32,27 @@ export default function SubscriberClient({ subscribers }: { subscribers: Subscri
     const res = await sendNewsletter(formData);
     if (res.success) {
       setStatus("success");
-      // Clear form inputs
       const form = document.getElementById("broadcastForm") as HTMLFormElement;
       form?.reset();
     } else {
       setStatus("error");
       setErrorMessage(res.error || "Failed to send newsletter.");
+    }
+  };
+
+  const handleDeleteSubscriber = async (id: string) => {
+    if (!isMasterAdmin) {
+      alert("Unauthorized: Only a Master Admin is permitted to delete subscribers.");
+      return;
+    }
+
+    if (!confirm("Are you sure you want to remove this subscriber?")) return;
+
+    const res = await deleteSubscriber(id);
+    if (res.success) {
+      setSubscribersList(subscribersList.filter((s) => s.id !== id));
+    } else {
+      alert("Failed to delete: " + res.error);
     }
   };
 
@@ -47,7 +63,7 @@ export default function SubscriberClient({ subscribers }: { subscribers: Subscri
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-[#1D1D1D]">Newsletter Subscribers</h1>
-          <p className="text-[#1D1D1D]/60 mt-1 font-medium">Manage and communicate with your {subscribers.length} active subscribers</p>
+          <p className="text-[#1D1D1D]/60 mt-1 font-medium">Manage and communicate with your {subscribersList.length} active subscribers</p>
         </div>
         <div className="flex flex-wrap gap-3">
           <button
@@ -74,7 +90,7 @@ export default function SubscriberClient({ subscribers }: { subscribers: Subscri
           Broadcast Email Newsletter
         </h2>
         <p className="text-sm text-[#1D1D1D]/60 mb-6 font-medium">
-          Send a beautiful updates newsletter to all {subscribers.length} subscribers at once. 
+          Send a beautiful updates newsletter to all {subscribersList.length} subscribers at once. 
           (Note: Resend credentials must be configured in <code>.env.local</code> for live broadcasts).
         </p>
 
@@ -131,10 +147,11 @@ export default function SubscriberClient({ subscribers }: { subscribers: Subscri
             <tr className="bg-[#F7F3E6] text-[#1D1D1D] text-sm uppercase tracking-wider font-bold">
               <th className="p-4 border-b border-[#1D1D1D]/5">Email Address</th>
               <th className="p-4 border-b border-[#1D1D1D]/5">Date Joined</th>
+              <th className="p-4 border-b border-[#1D1D1D]/5 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {subscribers.map((sub) => (
+            {subscribersList.map((sub) => (
               <tr key={sub.id} className="hover:bg-[#F7F3E6]/50 transition-colors">
                 <td className="p-4 border-b border-[#1D1D1D]/5 font-bold text-[#1D1D1D]">{sub.email}</td>
                 <td className="p-4 border-b border-[#1D1D1D]/5 text-[#1D1D1D]/60 font-medium">
@@ -146,11 +163,23 @@ export default function SubscriberClient({ subscribers }: { subscribers: Subscri
                     minute: "2-digit",
                   })}
                 </td>
+                <td className="p-4 border-b border-[#1D1D1D]/5 text-right">
+                  {isMasterAdmin ? (
+                    <button
+                      onClick={() => handleDeleteSubscriber(sub.id)}
+                      className="text-red-500 hover:text-red-700 p-2 bg-red-50 hover:bg-red-100 rounded-lg transition-colors inline-flex items-center"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  ) : (
+                    <span className="text-xs text-[#1D1D1D]/30 italic font-bold">Locked</span>
+                  )}
+                </td>
               </tr>
             ))}
-            {subscribers.length === 0 && (
+            {subscribersList.length === 0 && (
               <tr>
-                <td colSpan={2} className="p-12 text-center text-[#1D1D1D]/50 font-medium">No subscribers found yet.</td>
+                <td colSpan={3} className="p-12 text-center text-[#1D1D1D]/50 font-medium">No subscribers found yet.</td>
               </tr>
             )}
           </tbody>

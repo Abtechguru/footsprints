@@ -20,7 +20,7 @@ export default function Newsletter() {
     const res = await subscribeNewsletter(formData);
     if (res.success) {
       setStatus("success");
-      setMessage("Thank you for subscribing to Footprints Energy!");
+      setMessage("Thank you for subscribing to FootprintsEnergy!");
       setEmail("");
     } else {
       setStatus("error");

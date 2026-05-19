@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Footprints Energy - Quality Natural Products",
+  title: "FootprintsEnergy - Quality Natural Products",
   description: "Your trusted source for local, high-quality natural products and cures.",
   icons: {
     icon: "/images/footsprintLogo.jpeg",

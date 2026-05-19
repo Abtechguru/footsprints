@@ -2,22 +2,16 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Newsletter from "@/components/Newsletter";
 import Image from "next/image";
+import { supabase } from "@/lib/supabase";
+import { Mail } from "lucide-react";
 
-export default function TeamPage() {
-  const team = [
-    {
-      name: "Akin Tunmbi",
-      role: "Leadership / Founder",
-      image: "/images/AKIN TUNMBI.jpg",
-      bio: "With decades of experience in global trade and commodity markets, Akin guides our vision and cultivates international partnerships to ensure we stay ahead in a rapidly evolving marketplace."
-    },
-    {
-      name: "Melissa Caudill",
-      role: "Leadership / Operations",
-      image: "/images/MELISSA CAUDIL.jpg",
-      bio: "Driving our commitment to sustainability and customer success, Melissa leads our logistics and energy infrastructure operations with a focus on transparency and operational excellence."
-    }
-  ];
+export const revalidate = 0;
+
+export default async function TeamPage() {
+  const { data: team } = await supabase
+    .from("team_members")
+    .select("*")
+    .order("created_at", { ascending: true });
 
   return (
     <main className="min-h-screen bg-[#F7F3E6]">
@@ -40,7 +34,7 @@ export default function TeamPage() {
           
           <h1 className="text-5xl lg:text-7xl font-semibold text-[#1D1D1D] leading-[1] tracking-tighter mb-12">
             The Visionaries Behind <br />
-            <span className="text-[#FD630A]">Footprints Energy.</span>
+            <span className="text-[#FD630A]">FootprintsEnergy.</span>
           </h1>
           
           <p className="text-lg lg:text-xl text-[#1D1D1D]/70 leading-relaxed font-medium max-w-2xl mx-auto">
@@ -55,24 +49,35 @@ export default function TeamPage() {
         
         <div className="max-w-6xl mx-auto px-6 sm:px-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-20 lg:gap-24">
-            {team.map((member, idx) => (
-              <div key={idx} className="group space-y-10">
+            {team?.map((member) => (
+              <div key={member.id} className="group space-y-10">
                 {/* Image Container with Sliding Bio Overlay - Now 4/5 Aspect */}
                 <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-[#F7F3E6] border border-[#1D1D1D]/5 shadow-2xl group-hover:-translate-y-4 transition-all duration-700 ease-out">
                   <Image 
                     src={member.image} 
                     alt={member.name} 
                     fill 
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-out"
                   />
                   
                   {/* Sliding Glassmorphic Bio Overlay */}
                   <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-out z-20">
                     <div className="bg-[#1D1D1D]/90 backdrop-blur-md p-10 lg:p-12">
-                      <p className="text-white/80 text-sm lg:text-base leading-relaxed font-medium">
-                        {member.bio}
+                      <p className="text-white/85 text-sm lg:text-base leading-relaxed font-medium">
+                        {member.name} serves as the {member.role} at FootprintsEnergy, driving operational excellence, global commodity trade initiatives, and customer success worldwide.
                       </p>
-                      <div className="mt-8 h-px w-12 bg-[#FD630A]"></div>
+                      {member.email && (
+                        <div className="mt-8 flex items-center space-x-2">
+                          <a 
+                            href={`mailto:${member.email}`}
+                            className="inline-flex items-center space-x-2 bg-[#FD630A] hover:bg-white text-white hover:text-[#1D1D1D] px-4 py-2.5 rounded-lg text-xs font-bold transition-colors"
+                          >
+                            <Mail size={14} />
+                            <span>Contact {member.name.split(" ")[0]}</span>
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -87,10 +92,18 @@ export default function TeamPage() {
                 <div className="space-y-4 text-center">
                   <span className="text-[10px] font-bold text-[#DAA35D] uppercase tracking-[0.3em]">{member.role}</span>
                   <h3 className="text-4xl lg:text-5xl font-semibold text-[#1D1D1D] tracking-tighter">{member.name}</h3>
+                  {member.email && (
+                    <p className="text-xs text-[#1D1D1D]/50 font-sans">{member.email}</p>
+                  )}
                   <div className="h-px w-12 bg-[#FD630A] mx-auto opacity-40 group-hover:w-24 group-hover:opacity-100 transition-all duration-700"></div>
                 </div>
               </div>
             ))}
+            {(!team || team.length === 0) && (
+              <div className="col-span-1 md:col-span-2 text-center py-12 text-[#1D1D1D]/45 font-bold">
+                No visionary leadership team registered yet.
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -108,7 +121,7 @@ export default function TeamPage() {
           </h2>
           <div className="inline-block p-10 border border-[#1D1D1D]/10 bg-white shadow-xl">
              <p className="text-lg text-[#1D1D1D]/60 font-medium leading-relaxed">
-                Footprints Energy is a leading commodity trader, specializing in agricultural produce, animal protein and energy derivatives. We supply commodities such as Sugar (IC45, VHP), Animal Protein (Chicken, Bovine and Swine) and Grains (Soy, Corn and Coffee).
+                FootprintsEnergy is a leading commodity trader, specializing in agricultural produce, animal protein and energy derivatives. We supply commodities such as Sugar (IC45, VHP), Animal Protein (Chicken, Bovine and Swine) and Grains (Soy, Corn and Coffee).
              </p>
           </div>
         </div>

@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS public.team_members (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name TEXT NOT NULL,
     role TEXT NOT NULL,
+    email TEXT,
     image TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -108,5 +109,26 @@ ALTER TABLE public.receipts ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Allow service_role to manage receipts"
 ON public.receipts FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+
+
+-- 7. Create Invoices Table
+CREATE TABLE IF NOT EXISTS public.invoices (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    invoice_no TEXT UNIQUE NOT NULL,
+    client_name TEXT NOT NULL,
+    client_address TEXT NOT NULL,
+    date TEXT NOT NULL,
+    items JSONB NOT NULL,
+    total_amount NUMERIC NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Set up RLS for Invoices
+ALTER TABLE public.invoices ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow service_role to manage invoices"
+ON public.invoices FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+
 
 

@@ -2,6 +2,9 @@
 
 import { supabaseAdmin } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase-server";
+
 
 export async function addProduct(formData: FormData) {
   const name = formData.get("name") as string;
@@ -57,6 +60,7 @@ export async function deleteProduct(id: string) {
 export async function addTeamMember(formData: FormData) {
   const name = formData.get("name") as string;
   const role = formData.get("role") as string;
+  const email = formData.get("email") as string;
   const imageFile = formData.get("imageFile") as File;
 
   if (!name || !role || !imageFile) return;
@@ -81,7 +85,7 @@ export async function addTeamMember(formData: FormData) {
   }
 
   const { error } = await supabaseAdmin.from("team_members").insert([
-    { name, role, image: imageUrl }
+    { name, role, email, image: imageUrl }
   ]);
 
   if (error) {
@@ -92,6 +96,52 @@ export async function addTeamMember(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/admin/team");
 }
+
+export async function updateTeamMember(formData: FormData) {
+  const id = formData.get("id") as string;
+  const name = formData.get("name") as string;
+  const role = formData.get("role") as string;
+  const email = formData.get("email") as string;
+  const imageFile = formData.get("imageFile") as File;
+  const existingImage = formData.get("existingImage") as string;
+
+  if (!id || !name || !role) return { success: false, error: "Missing required fields" };
+
+  let imageUrl = existingImage;
+
+  // If a new file is uploaded, upload it to storage
+  if (imageFile && imageFile.size > 0) {
+    const fileExt = imageFile.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from('images')
+      .upload(fileName, imageFile, { contentType: imageFile.type });
+      
+    if (uploadError) {
+      console.error(uploadError);
+      return { success: false, error: "Image upload failed: " + uploadError.message };
+    }
+    
+    const { data } = supabaseAdmin.storage.from('images').getPublicUrl(fileName);
+    imageUrl = data.publicUrl;
+  }
+
+  const { error } = await supabaseAdmin
+    .from("team_members")
+    .update({ name, role, email, image: imageUrl })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/team");
+  return { success: true };
+}
+
 
 export async function deleteTeamMember(id: string) {
   const { error } = await supabaseAdmin.from("team_members").delete().eq("id", id);
@@ -154,19 +204,19 @@ export async function sendNewsletter(formData: FormData) {
 
     // Resend free tier sends up to 100 emails at once or to a list
     const { error: sendError } = await resend.emails.send({
-      from: "Footprints Energy <newsletter@footprints-energy.com>", // Make sure to verify domain in Resend
+      from: "FootprintsEnergy <newsletter@footprints-energy.com>", // Make sure to verify domain in Resend
       to: "newsletter@footprints-energy.com", // Send to self
       bcc: emails, // Send to all subscribers via BCC
       subject: subject,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #1d1d1d/5; rounded: 8px;">
-          <h2 style="color: #FD630A; font-weight: bold; margin-bottom: 20px;">Footprints Energy Newsletter</h2>
+          <h2 style="color: #FD630A; font-weight: bold; margin-bottom: 20px;">FootprintsEnergy Newsletter</h2>
           <div style="font-size: 16px; line-height: 1.6; color: #1d1d1d;">
             ${content.replace(/\n/g, "<br />")}
           </div>
           <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;" />
           <p style="font-size: 12px; color: #666; text-align: center;">
-            You are receiving this because you subscribed to Footprints Energy updates.<br />
+            You are receiving this because you subscribed to FootprintsEnergy updates.<br />
             To unsubscribe, please contact us.
           </p>
         </div>
@@ -379,6 +429,92 @@ export async function deleteReceipt(id: string) {
   revalidatePath("/admin/receipts");
   return { success: true };
 }
+
+export async function saveInvoice(invoiceData: any) {
+  const { invoiceNo, clientName, clientAddress, date, items, totalAmount, notes } = invoiceData;
+
+  const { data, error } = await supabaseAdmin.from("invoices").insert([{
+    invoice_no: invoiceNo,
+    client_name: clientName,
+    client_address: clientAddress,
+    date: date,
+    items: items,
+    total_amount: totalAmount,
+    notes: notes
+  }]).select();
+
+  if (error) {
+    console.error(error);
+    if (error.code === "23505") {
+      const { data: updateData, error: updateError } = await supabaseAdmin
+        .from("invoices")
+        .update({
+          client_name: clientName,
+          client_address: clientAddress,
+          date: date,
+          items: items,
+          total_amount: totalAmount,
+          notes: notes
+        })
+        .eq("invoice_no", invoiceNo)
+        .select();
+      
+      if (updateError) {
+        console.error(updateError);
+        return { success: false, error: updateError.message };
+      }
+      revalidatePath("/admin/invoices");
+      return { success: true, invoice: updateData[0] };
+    }
+
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/admin/invoices");
+  return { success: true, invoice: data[0] };
+}
+
+export async function deleteInvoice(id: string) {
+  const { error } = await supabaseAdmin.from("invoices").delete().eq("id", id);
+  if (error) {
+    console.error(error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/admin/invoices");
+  return { success: true };
+}
+
+export async function deleteSubscriber(id: string) {
+  const { error } = await supabaseAdmin.from("subscribers").delete().eq("id", id);
+  if (error) {
+    console.error(error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/admin/subscribers");
+  return { success: true };
+}
+
+export async function loginAdmin(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  
+  const supabaseServer = await createClient();
+  const { error } = await supabaseServer.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    redirect(`/admin/login?error=${encodeURIComponent(error.message)}`);
+  } else {
+    redirect("/admin");
+  }
+}
+
+
+
 
 
 

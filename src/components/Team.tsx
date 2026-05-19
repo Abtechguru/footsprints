@@ -49,15 +49,24 @@ export default async function Team() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1D1D1D] via-transparent to-transparent opacity-0 group-hover:opacity-80 transition-opacity duration-500"></div>
                 
                 {/* Social Overlay */}
-                <div className="absolute bottom-8 left-8 flex items-center space-x-4 opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100">
-                  <div className="bg-white p-3 rounded-full text-[#1D1D1D] hover:bg-[#FD630A] hover:text-white transition-colors cursor-pointer">
-                    <Mail size={20} />
+                {member.email && (
+                  <div className="absolute bottom-8 left-8 flex items-center space-x-4 opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100 z-30">
+                    <a 
+                      href={`mailto:${member.email}`}
+                      className="bg-white p-3 rounded-full text-[#1D1D1D] hover:bg-[#FD630A] hover:text-white transition-colors cursor-pointer block"
+                      title={`Email ${member.name}`}
+                    >
+                      <Mail size={20} />
+                    </a>
                   </div>
-                </div>
+                )}
               </div>
               
               <div className="mt-8">
                 <h4 className="text-2xl font-bold text-[#1D1D1D] mb-1">{member.name}</h4>
+                {member.email && (
+                  <p className="text-xs text-[#1D1D1D]/50 mb-2 font-sans">{member.email}</p>
+                )}
                 <p className="text-[#DAA35D] font-bold uppercase tracking-widest text-xs">{member.role}</p>
               </div>
             </div>
