@@ -50,7 +50,7 @@ export default async function AdminDashboard() {
       </div>
 
       <div className="bg-white p-8 rounded-xl shadow-sm border border-[#1D1D1D]/5">
-        <h2 className="text-xl font-bold text-[#1D1D1D] mb-4">Welcome to Footprints Admin</h2>
+        <h2 className="text-xl font-bold text-[#1D1D1D] mb-4">Welcome to FootprintsEnergy Admin</h2>
         <p className="text-[#1D1D1D]/60 leading-relaxed font-medium">
           Use the sidebar to navigate through the admin panel. You can manage your products and collections in the "Products" section, and update your leadership team in the "Team Members" section. All changes made here will reflect instantly on the public landing page.
         </p>

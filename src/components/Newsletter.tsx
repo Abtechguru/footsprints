@@ -1,6 +1,33 @@
+"use client";
+
+import { useState } from "react";
 import { Send } from "lucide-react";
+import { subscribeNewsletter } from "@/app/actions";
 
 export default function Newsletter() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setStatus("loading");
+
+    const formData = new FormData();
+    formData.append("email", email);
+
+    const res = await subscribeNewsletter(formData);
+    if (res.success) {
+      setStatus("success");
+      setMessage("Thank you for subscribing to Footprints Energy!");
+      setEmail("");
+    } else {
+      setStatus("error");
+      setMessage(res.error || "Subscription failed. Please try again.");
+    }
+  };
+
   return (
     <section className="py-16 lg:py-24 bg-white px-6 sm:px-12">
       <div 
@@ -26,17 +53,31 @@ export default function Newsletter() {
             Subscribe to our newsletter for the latest commodity price trends and trade opportunities.
           </p>
 
-          <form className="w-full flex flex-col sm:flex-row gap-4">
+          <form onSubmit={handleSubmit} className="w-full flex flex-col sm:flex-row gap-4 mb-4">
             <input 
               type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email address" 
+              required
               className="flex-1 bg-white/5 border border-white/10 rounded-full px-8 py-5 text-white placeholder:text-white/30 focus:outline-none focus:border-[#FD630A] transition-colors"
             />
-            <button className="bg-[#FD630A] text-white px-10 py-5 rounded-full font-bold hover:bg-white hover:text-[#1D1D1D] transition-all duration-300 flex items-center justify-center space-x-3">
-              <span>Subscribe Now</span>
+            <button 
+              type="submit" 
+              disabled={status === "loading"}
+              className="bg-[#FD630A] text-white px-10 py-5 rounded-full font-bold hover:bg-white hover:text-[#1D1D1D] transition-all duration-300 flex items-center justify-center space-x-3 disabled:opacity-50"
+            >
+              <span>{status === "loading" ? "Subscribing..." : "Subscribe Now"}</span>
               <Send size={18} />
             </button>
           </form>
+
+          {status === "success" && (
+            <p className="text-green-400 font-bold text-sm bg-green-500/10 py-2 px-4 rounded-full inline-block">{message}</p>
+          )}
+          {status === "error" && (
+            <p className="text-red-400 font-bold text-sm bg-red-500/10 py-2 px-4 rounded-full inline-block">{message}</p>
+          )}
         </div>
       </div>
     </section>

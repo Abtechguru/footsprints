@@ -90,6 +90,7 @@ export default function Hero() {
                 src="/images/Black-Pepper.jpeg" 
                 alt="Premium Black Pepper" 
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
             </div>
@@ -99,6 +100,7 @@ export default function Hero() {
                 src="/images/10-of-the-Healthiest-Vegetables-You-Can-Eat.jpeg" 
                 alt="Healthy Vegetables" 
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 priority
               />

@@ -58,6 +58,7 @@ export default async function ProductGrid() {
                     src={product.image} 
                     alt={product.name} 
                     fill 
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
                   />
                   {/* Gradient Overlay for Text Legibility */}

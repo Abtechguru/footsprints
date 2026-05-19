@@ -36,21 +36,77 @@ INSERT INTO public.team_members (name, role, image) VALUES
 ('Melissa Caudill', 'Commodity Trade Director', '/images/MELISSA CAUDIL.jpg');
 
 
--- 3. Set up Row Level Security (RLS)
--- Enable RLS on both tables
+-- 3. Create Staff Profiles (Role Based Access Control)
+CREATE TABLE IF NOT EXISTS public.staff_profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    email TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'staff',
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- IMPORTANT: You must manually insert your first master_admin after creating your user account in Supabase Auth.
+-- Example:
+-- INSERT INTO public.staff_profiles (id, email, role, is_active) VALUES ('your-auth-user-id', 'your@email.com', 'master_admin', true);
+
+
+-- 4. Set up Row Level Security (RLS)
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.staff_profiles ENABLE ROW LEVEL SECURITY;
 
--- Create policies so that ANYONE can read (SELECT) the data
 CREATE POLICY "Allow public read access to products" 
 ON public.products FOR SELECT USING (true);
 
 CREATE POLICY "Allow public read access to team_members" 
 ON public.team_members FOR SELECT USING (true);
 
--- Create policies so that only SERVICE ROLE (our server-side code) can INSERT/UPDATE/DELETE
+-- Allow service_role to manage all
 CREATE POLICY "Allow service_role to manage products"
 ON public.products FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
 
 CREATE POLICY "Allow service_role to manage team_members"
 ON public.team_members FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+
+CREATE POLICY "Allow service_role to manage staff"
+ON public.staff_profiles FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+
+
+-- 5. Create Subscribers Table
+CREATE TABLE IF NOT EXISTS public.subscribers (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Set up RLS for Subscribers
+ALTER TABLE public.subscribers ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public insert to subscribers"
+ON public.subscribers FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Allow service_role to manage subscribers"
+ON public.subscribers FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+
+
+-- 6. Create Receipts Table
+CREATE TABLE IF NOT EXISTS public.receipts (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    receipt_no TEXT UNIQUE NOT NULL,
+    buyer_name TEXT NOT NULL,
+    buyer_email TEXT NOT NULL,
+    date TEXT NOT NULL,
+    items JSONB NOT NULL,
+    payments JSONB NOT NULL,
+    total_charges NUMERIC NOT NULL,
+    footnotes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Set up RLS for Receipts
+ALTER TABLE public.receipts ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow service_role to manage receipts"
+ON public.receipts FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
+
+

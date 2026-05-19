@@ -1,6 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabase";
 import { deleteTeamMember, addTeamMember } from "@/app/actions";
 import Image from "next/image";
+import SubmitButton from "@/components/SubmitButton";
 
 export const revalidate = 0;
 
@@ -23,13 +24,11 @@ export default async function AdminTeam() {
             <input type="text" name="role" required className="border border-[#1D1D1D]/10 rounded-lg px-4 py-3 focus:outline-none focus:border-[#FD630A]" placeholder="e.g. Chief Executive Officer" />
           </div>
           <div className="flex flex-col space-y-2 md:col-span-2">
-            <label className="text-sm font-bold text-[#1D1D1D]/70">Image Path / URL</label>
-            <input type="text" name="image" required className="border border-[#1D1D1D]/10 rounded-lg px-4 py-3 focus:outline-none focus:border-[#FD630A]" placeholder="/images/member.jpeg" />
+            <label className="text-sm font-bold text-[#1D1D1D]/70">Profile Picture Upload</label>
+            <input type="file" name="imageFile" accept="image/*" required className="border border-[#1D1D1D]/10 rounded-lg px-4 py-3 focus:outline-none focus:border-[#FD630A] bg-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-[#1D1D1D]/5 file:text-[#1D1D1D] hover:file:bg-[#1D1D1D]/10 transition-all cursor-pointer" />
           </div>
           <div className="md:col-span-2 pt-4">
-            <button type="submit" className="bg-[#1D1D1D] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#FD630A] transition-colors">
-              Add Member
-            </button>
+            <SubmitButton defaultText="Add Member" loadingText="Uploading..." className="bg-[#1D1D1D] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#FD630A] transition-colors w-auto inline-flex" />
           </div>
         </form>
       </div>
@@ -49,7 +48,7 @@ export default async function AdminTeam() {
               <tr key={member.id} className="hover:bg-[#F7F3E6]/50 transition-colors">
                 <td className="p-4 border-b border-[#1D1D1D]/5">
                   <div className="relative w-12 h-12 rounded overflow-hidden">
-                    <Image src={member.image} alt={member.name} fill className="object-cover" />
+                    <Image src={member.image} alt={member.name} fill sizes="48px" className="object-cover" />
                   </div>
                 </td>
                 <td className="p-4 border-b border-[#1D1D1D]/5 font-bold text-[#1D1D1D]">{member.name}</td>
