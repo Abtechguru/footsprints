@@ -806,6 +806,142 @@ export async function uploadLogo(formData: FormData) {
   return { success: true, url: data.publicUrl };
 }
 
+export async function signUpClient(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  
+  const supabaseServer = await createClient();
+  const { data, error } = await supabaseServer.auth.signUp({
+    email,
+    password,
+  });
+  
+  if (error) {
+    return { success: false, error: error.message };
+  }
+  return { success: true };
+}
+
+export async function signInClient(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  
+  const supabaseServer = await createClient();
+  const { error } = await supabaseServer.auth.signInWithPassword({
+    email,
+    password,
+  });
+  
+  if (error) {
+    return { success: false, error: error.message };
+  }
+  return { success: true };
+}
+
+export async function signOutClient() {
+  const supabaseServer = await createClient();
+  await supabaseServer.auth.signOut();
+  redirect("/portal");
+}
+
+export async function createOrder(productId: string, productName: string, quantity: string, notes: string) {
+  const supabaseServer = await createClient();
+  const { data: { user } } = await supabaseServer.auth.getUser();
+  if (!user) return { success: false, error: "Not authenticated" };
+  
+  const { data, error } = await supabaseAdmin.from("orders").insert([
+    {
+      user_id: user.id,
+      user_email: user.email,
+      product_id: productId,
+      product_name: productName,
+      quantity: quantity,
+      notes: notes,
+      status: "pending"
+    }
+  ]).select();
+  
+  if (error) {
+    return { success: false, error: error.message };
+  }
+  return { success: true, order: data[0] };
+}
+
+export async function sendChatMessage(message: string) {
+  const supabaseServer = await createClient();
+  const { data: { user } } = await supabaseServer.auth.getUser();
+  if (!user) return { success: false, error: "Not authenticated" };
+  
+  const { data, error } = await supabaseAdmin.from("chat_messages").insert([
+    {
+      user_id: user.id,
+      user_email: user.email,
+      sender: "visitor",
+      message: message
+    }
+  ]).select();
+  
+  if (error) {
+    return { success: false, error: error.message };
+  }
+  return { success: true, chat: data[0] };
+}
+
+export async function sendAdminChatMessage(userId: string, message: string) {
+  const supabaseServer = await createClient();
+  const { data: { user: adminUser } } = await supabaseServer.auth.getUser();
+  if (!adminUser) return { success: false, error: "Not authenticated" };
+  
+  const { data: profile } = await supabaseAdmin
+    .from("staff_profiles")
+    .select("is_active, email")
+    .eq("id", adminUser.id)
+    .single();
+    
+  if (!profile || profile.is_active === false) {
+    return { success: false, error: "Restricted access." };
+  }
+  
+  const { data, error } = await supabaseAdmin.from("chat_messages").insert([
+    {
+      user_id: userId,
+      user_email: profile.email || "admin",
+      sender: "admin",
+      message: message
+    }
+  ]).select();
+  
+  if (error) {
+    return { success: false, error: error.message };
+  }
+  return { success: true, chat: data[0] };
+}
+
+export async function updateOrderStatus(orderId: string, status: string) {
+  const supabaseServer = await createClient();
+  const { data: { user: adminUser } } = await supabaseServer.auth.getUser();
+  if (!adminUser) return { success: false, error: "Not authenticated" };
+  
+  const { data: profile } = await supabaseAdmin
+    .from("staff_profiles")
+    .select("is_active")
+    .eq("id", adminUser.id)
+    .single();
+    
+  if (!profile || profile.is_active === false) {
+    return { success: false, error: "Restricted access." };
+  }
+  
+  const { error } = await supabaseAdmin
+    .from("orders")
+    .update({ status })
+    .eq("id", orderId);
+    
+  if (error) return { success: false, error: error.message };
+  revalidatePath("/admin/orders");
+  return { success: true };
+}
+
 
 
 

@@ -18,9 +18,6 @@ export default function Navbar({ settings = DEFAULT_LANDING_SETTINGS }: { settin
             <span>{settings.contact_email_secondary}</span>
           </a>
         </div>
-        <div className="hidden sm:flex items-center space-x-4">
-          <Link href="/admin/login" className="hover:text-[#FD630A] transition-colors">Admin Portal</Link>
-        </div>
       </div>
 
       {/* Main Header Brand Area */}
@@ -57,6 +54,13 @@ export default function Navbar({ settings = DEFAULT_LANDING_SETTINGS }: { settin
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#FD630A] transition-all group-hover:w-full"></span>
             </Link>
           ))}
+          <Link 
+            href="/portal"
+            className="text-[#DAA35D] text-sm font-bold uppercase tracking-wider hover:text-[#FD630A] transition-colors relative group py-1"
+          >
+            Sign In
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#FD630A] transition-all group-hover:w-full"></span>
+          </Link>
         </nav>
 
         {/* Mobile Menu Trigger */}
