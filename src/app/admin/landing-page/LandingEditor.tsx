@@ -12,7 +12,7 @@ interface LandingEditorProps {
 }
 
 export default function LandingEditor({ initialSettings }: LandingEditorProps) {
-  const [activeTab, setActiveTab] = useState<"hero" | "about" | "value-props" | "process">("hero");
+  const [activeTab, setActiveTab] = useState<"hero" | "about" | "value-props" | "process" | "contact">("hero");
   const [settings, setSettings] = useState<LandingSettings>(initialSettings);
   const [status, setStatus] = useState<{ success: boolean; message: string } | null>(null);
 
@@ -61,7 +61,7 @@ export default function LandingEditor({ initialSettings }: LandingEditorProps) {
     setStatus(null);
 
     const formData = new FormData(e.currentTarget);
-    
+
     // Append JSON lists
     formData.append("value_props_list_json", JSON.stringify(valueProps));
     formData.append("process_steps_list_json", JSON.stringify(processSteps));
@@ -98,11 +98,10 @@ export default function LandingEditor({ initialSettings }: LandingEditorProps) {
             key={tab.id}
             type="button"
             onClick={() => setActiveTab(tab.id as any)}
-            className={`flex items-center space-x-2 px-6 py-4 font-bold text-sm border-b-2 transition-all whitespace-nowrap ${
-              activeTab === tab.id
-                ? "border-[#FD630A] text-[#FD630A]"
-                : "border-transparent text-[#1D1D1D]/55 hover:text-[#1D1D1D]"
-            }`}
+            className={`flex items-center space-x-2 px-6 py-4 font-bold text-sm border-b-2 transition-all whitespace-nowrap ${activeTab === tab.id
+              ? "border-[#FD630A] text-[#FD630A]"
+              : "border-transparent text-[#1D1D1D]/55 hover:text-[#1D1D1D]"
+              }`}
           >
             {tab.icon}
             <span>{tab.label}</span>
@@ -112,11 +111,10 @@ export default function LandingEditor({ initialSettings }: LandingEditorProps) {
 
       {status && (
         <div
-          className={`p-4 rounded-xl text-sm font-semibold border ${
-            status.success
-              ? "bg-green-50 text-green-800 border-green-200"
-              : "bg-red-50 text-red-800 border-red-200"
-          }`}
+          className={`p-4 rounded-xl text-sm font-semibold border ${status.success
+            ? "bg-green-50 text-green-800 border-green-200"
+            : "bg-red-50 text-red-800 border-red-200"
+            }`}
         >
           {status.message}
         </div>
@@ -129,7 +127,7 @@ export default function LandingEditor({ initialSettings }: LandingEditorProps) {
 
       {/* Tab Contents */}
       <div className="space-y-6">
-        
+
         {/* HERO SECTION TAB */}
         {activeTab === "hero" && (
           <div className="space-y-6 animate-fadeIn">
