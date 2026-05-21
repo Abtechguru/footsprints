@@ -29,7 +29,7 @@ interface SavedInvoice {
 export default function InvoiceClient({ products, initialInvoices, isMasterAdmin }: { products: any[]; initialInvoices: SavedInvoice[]; isMasterAdmin: boolean }) {
   const [invoicesList, setInvoicesList] = useState<SavedInvoice[]>(initialInvoices);
   const [isClient, setIsClient] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     invoiceNo: `INV-${Math.floor(1000 + Math.random() * 9000)}`,
     date: new Date().toLocaleDateString("en-US"),
@@ -132,7 +132,7 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
     if (res.success && res.invoice) {
       setStatus("success");
       setMessage("Invoice successfully saved in the database!");
-      
+
       const exists = invoicesList.find((i) => i.invoice_no === formData.invoiceNo);
       if (exists) {
         setInvoicesList(invoicesList.map((i) => (i.invoice_no === formData.invoiceNo ? res.invoice : i)));
@@ -156,7 +156,7 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
     });
     setItems(inv.items);
     setPdfReady(false);
-    
+
     setStatus("idle");
     setMessage("");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -196,6 +196,10 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
                   clientName: "John Doe & Co.",
                   clientAddress: "123 Business Rd, suite 100",
                   notes: "Please review the quotation details above. This quotation is valid for 15 days.",
+                  companyName: "Footprints Energy",
+                  companyAddress: "123 Trade Center Blvd\nNew York, NY 10001",
+                  companyContact: "contact@footprintsenergy.com\n+1 (555) 123-4567",
+                  companyLogo: "",
                 });
                 setItems([{ id: "1", productName: products[0]?.name || "ICUMSA 45 Sugar", quantity: "100 MT", unitPrice: 450 }]);
                 setPdfReady(false);
@@ -205,7 +209,7 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
               Reset Form
             </button>
           </div>
-          
+
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col space-y-2">
@@ -230,7 +234,7 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
 
             <div className="border-t border-[#1D1D1D]/10 pt-4 mt-6">
               <h3 className="font-bold text-[#1D1D1D] mb-4">Issuer / Company Details</h3>
-              
+
               <div className="flex flex-col space-y-2 mb-4">
                 <label className="text-sm font-bold text-[#1D1D1D]/70 flex items-center space-x-1.5">
                   <ImageIcon size={16} className="text-[#FD630A]" />
@@ -267,9 +271,9 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
                 <div key={item.id} className="grid grid-cols-12 gap-2 mb-4 items-end bg-[#F7F3E6] p-4 rounded-lg">
                   <div className="col-span-12 md:col-span-5 flex flex-col space-y-2">
                     <label className="text-xs font-bold text-[#1D1D1D]/70">Product</label>
-                    <select 
-                      value={item.productName} 
-                      onChange={(e) => { handleItemChange(item.id, 'productName', e.target.value); }} 
+                    <select
+                      value={item.productName}
+                      onChange={(e) => { handleItemChange(item.id, 'productName', e.target.value); }}
                       className="border border-[#1D1D1D]/10 rounded-lg px-3 py-2 focus:outline-none focus:border-[#FD630A] bg-white text-sm"
                     >
                       <option value="">Custom Item</option>
@@ -313,10 +317,10 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
             <div className="text-3xl font-black text-[#FD630A] border-t border-white/10 pt-4 font-sans">
               Total: ${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
-            
+
             <div className="space-y-4">
               {!pdfReady ? (
-                <button 
+                <button
                   onClick={handleCompile}
                   className="block w-full text-center bg-[#DAA35D] hover:bg-[#c28f4c] transition-colors text-white font-bold py-4 rounded-lg text-sm uppercase tracking-widest shadow-lg shadow-[#DAA35D]/10"
                 >
