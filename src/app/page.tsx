@@ -1,25 +1,40 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import ProductRibbon from "@/components/ProductRibbon";
 import About from "@/components/About";
-import ProductGrid from "@/components/ProductGrid";
-import Team from "@/components/Team";
-import Process from "@/components/Process";
 import ValueProps from "@/components/ValueProps";
+import Process from "@/components/Process";
+import MiddleBanner from "@/components/MiddleBanner";
+import MissionQuote from "@/components/MissionQuote";
+import ProductGrid from "@/components/ProductGrid";
+import Partnership from "@/components/Partnership";
+import RecentNews from "@/components/RecentNews";
+import ProductsSummary from "@/components/ProductsSummary";
+import Team from "@/components/Team";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
+import { getLandingSettings } from "@/lib/landing-settings";
 
-export default function Home() {
+export default async function Home() {
+  const settings = await getLandingSettings();
+
   return (
-    <main className="min-h-screen">
-      <Navbar />
-      <Hero />
-      <About />
+    <main className="min-h-screen bg-white">
+      <Navbar settings={settings} />
+      <Hero settings={settings} />
+      <ProductRibbon />
+      <About settings={settings} />
+      <ValueProps settings={settings} />
+      <Process settings={settings} />
+      <MiddleBanner settings={settings} />
+      <MissionQuote settings={settings} />
       <ProductGrid />
-      <ValueProps />
-      <Process />
+      <Partnership />
+      <RecentNews />
+      <ProductsSummary settings={settings} />
       <Team />
       <Newsletter />
-      <Footer />
+      <Footer settings={settings} />
     </main>
   );
 }

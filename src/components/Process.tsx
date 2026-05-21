@@ -1,75 +1,111 @@
-import { ArrowRight, FileText, BadgeCheck, Truck } from "lucide-react";
+import Link from "next/link";
+import { FileText, BadgeCheck, Truck } from "lucide-react";
+import { LandingSettings } from "@/lib/landing-settings";
 
-const steps = [
-  {
-    id: "01",
-    title: "LOI (Letter of Intent)",
-    desc: "To get started, please send a Letter of Intent outlining product specifications, quantity, and destination. We'll promptly provide a formal offer.",
-    icon: <FileText className="text-[#FD630A]" size={32} />
-  },
-  {
-    id: "02",
-    title: "FCO (Full Corporate Offer)",
-    desc: "Our Full Corporate Offer will be tailored specifically to your request and will remain valid for a limited period, reflecting global market prices.",
-    icon: <BadgeCheck className="text-[#FD630A]" size={32} />
-  },
-  {
-    id: "03",
-    title: "SPA & Delivery",
-    desc: "To finalize, a Sales and Purchase Agreement (SPA) must be executed. Footprints Energy operates under Incoterms and is based in the USA.",
-    icon: <Truck className="text-[#FD630A]" size={32} />
-  }
-];
+const getStepIcon = (idx: number) => {
+  const icons = [
+    <FileText className="text-[#FD630A]" size={20} />,
+    <BadgeCheck className="text-[#FD630A]" size={20} />,
+    <Truck className="text-[#FD630A]" size={20} />
+  ];
+  return icons[idx % icons.length];
+};
 
-export default function Process() {
+export default function Process({ settings }: { settings: LandingSettings }) {
+  const steps = settings.process_steps_list || [];
+
   return (
-    <section className="py-16 lg:py-24 bg-[#1D1D1D] text-white relative overflow-hidden">
-      {/* Dark Mode Architectural Lines - Normalized Opacity */}
-      <div className="absolute top-0 right-0 w-full h-full opacity-[0.06] pointer-events-none z-0">
-        <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" className="w-full h-full rotate-45">
-          <path d="M0,500 L1000,500 M500,0 L500,1000" stroke="white" strokeWidth="1" fill="none" />
-          <circle cx="500" cy="500" r="300" stroke="#FD630A" strokeWidth="1" fill="none" />
+    <section className="py-16 lg:py-24 bg-white border-y border-[#1D1D1D]/5 relative overflow-hidden">
+      {/* Background visual detail */}
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none z-0">
+        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <line x1="10" y1="0" x2="10" y2="100" stroke="#1D1D1D" strokeWidth="0.1" />
+          <line x1="90" y1="0" x2="90" y2="100" stroke="#1D1D1D" strokeWidth="0.1" />
         </svg>
       </div>
 
-      {/* Decorative vertical line to match Hero/About */}
-      <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/5 hidden lg:block z-0"></div>
-
       <div className="max-w-[90rem] mx-auto px-6 sm:px-12 relative z-10">
-        <div className="mb-12 lg:mb-20">
-          <h2 className="text-[10px] font-bold text-[#FD630A] uppercase tracking-[0.4em] mb-4">The Lifecycle</h2>
-          <h3 className="text-4xl lg:text-6xl font-semibold tracking-tight">How We <span className="text-white/40 italic">Work</span></h3>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+          
+          {/* Left Column: Logistics World Map SVG with Pulsing Nodes */}
+          <div className="relative flex justify-center order-2 lg:order-1">
+            <div className="w-full max-w-[500px] aspect-[1.6] relative bg-[#1D1D1D] rounded-sm p-4 shadow-xl border border-[#1D1D1D]/10">
+              <svg className="w-full h-full opacity-60" viewBox="0 0 800 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* World Outline / Abstract Grid */}
+                <path d="M50 150 L750 150 M50 250 L750 250 M50 350 L750 350" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+                <path d="M150 50 L150 450 M300 50 L300 450 M450 50 L450 450 M600 50 L600 450" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+                
+                {/* Connecting Route Arcs */}
+                <path d="M 180 180 Q 300 100 450 280" stroke="#FD630A" strokeWidth="1.5" strokeDasharray="5,5" className="animate-[dash_20s_linear_infinite]" />
+                <path d="M 450 280 Q 550 200 680 220" stroke="#FD630A" strokeWidth="1.5" strokeDasharray="5,5" className="animate-[dash_20s_linear_infinite]" />
+                <path d="M 180 180 Q 350 350 450 280" stroke="#DAA35D" strokeWidth="1.5" strokeDasharray="5,5" className="animate-[dash_20s_linear_infinite]" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-0 border-t border-white/10 pt-16">
-          {steps.map((step, idx) => (
-            <div 
-              key={idx} 
-              className="flex flex-col space-y-8 lg:px-12 group first:pl-0 last:pr-0 lg:border-r border-white/5 last:border-r-0 pb-8 lg:pb-0 border-b lg:border-b-0 last:border-b-0"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-6xl font-bold text-white/5 group-hover:text-[#FD630A]/20 transition-colors duration-500">{step.id}</span>
-                <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-[#FD630A]/10 transition-colors duration-500">
-                  {step.icon}
-                </div>
-              </div>
+                {/* Hub 1: Americas (Houston) */}
+                <circle cx="180" cy="180" r="6" fill="#FD630A" />
+                <circle cx="180" cy="180" r="12" stroke="#FD630A" strokeWidth="1" className="animate-ping" />
+                
+                {/* Hub 2: Europe / ME (Paris) */}
+                <circle cx="410" cy="150" r="6" fill="#FD630A" />
+                <circle cx="410" cy="150" r="12" stroke="#FD630A" strokeWidth="1" className="animate-ping" />
+
+                {/* Hub 3: Africa (Lagos) */}
+                <circle cx="450" cy="280" r="8" fill="#FD630A" />
+                <circle cx="450" cy="280" r="16" stroke="#FD630A" strokeWidth="1" className="animate-ping" />
+                
+                {/* Hub 4: Asia (Singapore) */}
+                <circle cx="680" cy="320" r="6" fill="#FD630A" />
+                <circle cx="680" cy="320" r="12" stroke="#FD630A" strokeWidth="1" className="animate-ping" />
+              </svg>
               
-              <div className="space-y-4">
-                <h4 className="text-2xl font-bold tracking-tight group-hover:text-[#FD630A] transition-colors">{step.title}</h4>
-                <p className="text-white/60 leading-relaxed font-medium">
-                  {step.desc}
-                </p>
+              <div className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-sm">
+                <span className="text-[9px] font-bold text-white uppercase tracking-wider block">Global Sourcing Network</span>
+                <span className="text-[8px] text-white/60 block">Real-time supply routes active</span>
               </div>
-
-              {idx < 2 && (
-                <div className="hidden lg:flex items-center text-white/10 group-hover:text-[#FD630A] transition-colors duration-500">
-                  <ArrowRight size={48} className="translate-x-12" />
-                </div>
-              )}
             </div>
-          ))}
+          </div>
+
+          {/* Right Column: Title and Process Steps */}
+          <div className="space-y-8 order-1 lg:order-2">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <div className="h-px w-12 bg-[#FD630A]"></div>
+                <span className="text-[10px] font-bold text-[#DAA35D] uppercase tracking-[0.4em]">{settings.process_label || "Logistics"}</span>
+              </div>
+              <h3 className="text-4xl lg:text-5xl font-semibold text-[#1D1D1D] tracking-tight leading-[1.1] uppercase">
+                {settings.process_title || "Global Logistics & Operations"}
+              </h3>
+            </div>
+
+            {/* Vertical Steps */}
+            <div className="space-y-6">
+              {steps.map((step, idx) => (
+                <div key={idx} className="flex gap-6 items-start group">
+                  <div className="p-3 bg-[#F7F3E6] group-hover:bg-[#FD630A] group-hover:text-white transition-colors duration-500 rounded-sm text-[#1D1D1D]">
+                    {getStepIcon(idx)}
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-bold text-[#1D1D1D] tracking-tight">{step.title}</h4>
+                    <p className="text-sm text-[#1D1D1D]/60 leading-relaxed font-medium mt-1">
+                      {step.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-4">
+              <Link 
+                href="/sessions" 
+                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#FD630A] hover:text-[#1D1D1D] transition-colors"
+              >
+                <span>View Operations Log &rarr;</span>
+              </Link>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
   );
 }
+

@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import InvoicePDF from "@/components/InvoicePDF";
-import { Mail, Printer, Plus, Trash2, ShieldCheck, Save, FolderOpen } from "lucide-react";
-import { saveInvoice, deleteInvoice } from "@/app/actions";
+import { Mail, Printer, Plus, Trash2, ShieldCheck, Save, FolderOpen, Image as ImageIcon } from "lucide-react";
+import { saveInvoice, deleteInvoice, uploadLogo } from "@/app/actions";
 import SubmitButton from "@/components/SubmitButton";
 
 interface InvoiceItem {
@@ -36,7 +36,26 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
     clientName: "John Doe & Co.",
     clientAddress: "123 Business Rd, suite 100",
     notes: "Please review the quotation details above. This quotation is valid for 15 days.",
+    companyName: "Footprints Energy",
+    companyAddress: "123 Trade Center Blvd\nNew York, NY 10001",
+    companyContact: "contact@footprintsenergy.com\n+1 (555) 123-4567",
+    companyLogo: "",
   });
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const formDataUpload = new FormData();
+      formDataUpload.append("file", file);
+      const res = await uploadLogo(formDataUpload);
+      if (res.success && res.url) {
+        setFormData({ ...formData, companyLogo: res.url });
+        setPdfReady(false);
+      } else {
+        alert("Failed to upload logo: " + res.error);
+      }
+    }
+  };
 
   const [items, setItems] = useState<InvoiceItem[]>([
     { id: "1", productName: products[0]?.name || "ICUMSA 45 Sugar", quantity: "100 MT", unitPrice: 450 }
@@ -128,6 +147,7 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
 
   const handleLoadInvoice = (inv: SavedInvoice) => {
     setFormData({
+      ...formData,
       invoiceNo: inv.invoice_no,
       date: inv.date,
       clientName: inv.client_name,
@@ -206,6 +226,39 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
             <div className="flex flex-col space-y-2">
               <label className="text-sm font-bold text-[#1D1D1D]/70">Client Address</label>
               <input type="text" name="clientAddress" value={formData.clientAddress} onChange={(e) => { handleChange(e); }} placeholder="123 Street, City, Country" className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#FD630A]" />
+            </div>
+
+            <div className="border-t border-[#1D1D1D]/10 pt-4 mt-6">
+              <h3 className="font-bold text-[#1D1D1D] mb-4">Issuer / Company Details</h3>
+              
+              <div className="flex flex-col space-y-2 mb-4">
+                <label className="text-sm font-bold text-[#1D1D1D]/70 flex items-center space-x-1.5">
+                  <ImageIcon size={16} className="text-[#FD630A]" />
+                  <span>Company Logo</span>
+                </label>
+                <div className="flex items-center space-x-4">
+                  {formData.companyLogo && (
+                    <img src={formData.companyLogo} alt="Logo" className="h-12 w-12 object-contain border border-[#1D1D1D]/10 rounded bg-white p-1" />
+                  )}
+                  <input type="file" accept="image/*" onChange={handleLogoUpload} className="text-xs" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col space-y-2">
+                  <label className="text-sm font-bold text-[#1D1D1D]/70">Company Name</label>
+                  <input type="text" name="companyName" value={formData.companyName} onChange={(e) => { handleChange(e); }} className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#FD630A]" />
+                </div>
+                <div className="flex flex-col space-y-2">
+                  <label className="text-sm font-bold text-[#1D1D1D]/70">Company Contact</label>
+                  <textarea name="companyContact" value={formData.companyContact} onChange={(e) => { handleChange(e); }} rows={2} className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#FD630A] text-xs resize-none" />
+                </div>
+              </div>
+
+              <div className="flex flex-col space-y-2 mt-4">
+                <label className="text-sm font-bold text-[#1D1D1D]/70">Company Address</label>
+                <textarea name="companyAddress" value={formData.companyAddress} onChange={(e) => { handleChange(e); }} rows={2} className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#FD630A] text-xs resize-none" />
+              </div>
             </div>
 
             <div className="border-t border-[#1D1D1D]/10 pt-4 mt-6">

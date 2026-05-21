@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Package, Users, LogOut, Mail, FileText } from "lucide-react";
+import { LayoutDashboard, Package, Users, LogOut, Mail, FileText, Home, Video } from "lucide-react";
 import { createClient } from "@/lib/supabase-server";
 import { createClient as createClientAdmin } from "@supabase/supabase-js";
 
@@ -40,6 +40,14 @@ export default async function AdminLayout({
           <Link href="/admin" className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80 hover:text-white">
             <LayoutDashboard size={20} />
             <span className="font-medium">Dashboard</span>
+          </Link>
+          <Link href="/admin/landing-page" className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80 hover:text-white">
+            <Home size={20} />
+            <span className="font-medium">Adjust Landing</span>
+          </Link>
+          <Link href="/admin/sessions" className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80 hover:text-white">
+            <Video size={20} />
+            <span className="font-medium">Sessions</span>
           </Link>
           <Link href="/admin/invoices" className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-white/80 hover:text-white">
             <Package size={20} />

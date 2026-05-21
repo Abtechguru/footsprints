@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Printer, Plus, Trash2, ShieldCheck, Save, FolderOpen } from "lucide-react";
-import { sendReceiptEmail, saveReceipt, deleteReceipt } from "@/app/actions";
+import { Mail, Printer, Plus, Trash2, ShieldCheck, Save, FolderOpen, Image as ImageIcon } from "lucide-react";
+import { sendReceiptEmail, saveReceipt, deleteReceipt, uploadLogo } from "@/app/actions";
 import SubmitButton from "@/components/SubmitButton";
 
 interface ChargeItem {
@@ -46,7 +46,25 @@ export default function ReceiptClient({ products, initialReceipts, isMasterAdmin
   const [buyerEmail, setBuyerEmail] = useState("buyer@example.com");
   const [receiptNo, setReceiptNo] = useState(`RE-${Math.floor(100000000 + Math.random() * 900000000)}`);
   const [receiptDate, setReceiptDate] = useState(new Date().toLocaleDateString("en-US"));
-  
+  const [companyName, setCompanyName] = useState("Footprints Energy");
+  const [companyContact, setCompanyContact] = useState("contact@footprintsenergy.com\n+1 (555) 123-4567");
+  const [companyAddress, setCompanyAddress] = useState("123 Trade Center Blvd\nNew York, NY 10001");
+  const [companyLogo, setCompanyLogo] = useState("");
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const formDataUpload = new FormData();
+      formDataUpload.append("file", file);
+      const res = await uploadLogo(formDataUpload);
+      if (res.success && res.url) {
+        setCompanyLogo(res.url);
+      } else {
+        alert("Failed to upload logo: " + res.error);
+      }
+    }
+  };
+
   const [charges, setCharges] = useState<ChargeItem[]>([
     {
       id: "1",
@@ -169,6 +187,10 @@ export default function ReceiptClient({ products, initialReceipts, isMasterAdmin
       })),
       totalCharges: subtotalCharges,
       footnotes,
+      companyName,
+      companyContact,
+      companyAddress,
+      companyLogo,
     };
   };
 
@@ -305,6 +327,39 @@ export default function ReceiptClient({ products, initialReceipts, isMasterAdmin
             <div className="flex flex-col space-y-1">
               <label className="text-xs font-bold text-[#1D1D1D]/70 uppercase">Receipt Date</label>
               <input type="text" value={receiptDate} onChange={(e) => setReceiptDate(e.target.value)} required className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-[#FD630A]" />
+            </div>
+          </div>
+
+          <div className="border-t border-[#1D1D1D]/10 pt-4 mt-6">
+            <h3 className="font-bold text-[#1D1D1D] mb-4">Issuer / Company Details</h3>
+            
+            <div className="flex flex-col space-y-2 mb-4">
+              <label className="text-sm font-bold text-[#1D1D1D]/70 flex items-center space-x-1.5">
+                <ImageIcon size={16} className="text-[#FD630A]" />
+                <span>Company Logo</span>
+              </label>
+              <div className="flex items-center space-x-4">
+                {companyLogo && (
+                  <img src={companyLogo} alt="Logo" className="h-12 w-12 object-contain border border-[#1D1D1D]/10 rounded bg-white p-1" />
+                )}
+                <input type="file" accept="image/*" onChange={handleLogoUpload} className="text-xs" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex flex-col space-y-2">
+                <label className="text-sm font-bold text-[#1D1D1D]/70">Company Name</label>
+                <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#FD630A]" />
+              </div>
+              <div className="flex flex-col space-y-2">
+                <label className="text-sm font-bold text-[#1D1D1D]/70">Company Contact</label>
+                <textarea value={companyContact} onChange={(e) => setCompanyContact(e.target.value)} rows={2} className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#FD630A] text-xs resize-none" />
+              </div>
+            </div>
+
+            <div className="flex flex-col space-y-2 mt-4">
+              <label className="text-sm font-bold text-[#1D1D1D]/70">Company Address</label>
+              <textarea value={companyAddress} onChange={(e) => setCompanyAddress(e.target.value)} rows={2} className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#FD630A] text-xs resize-none" />
             </div>
           </div>
 
@@ -506,13 +561,25 @@ export default function ReceiptClient({ products, initialReceipts, isMasterAdmin
             <div className="relative z-10">
               {/* Header */}
               <div className="flex justify-between items-center border-b-2 border-[#FD630A] pb-6 mb-8">
-                <div>
-                  <h1 className="text-2xl font-black tracking-tight text-[#1D1D1D] leading-none">
-                    Footprints<span className="text-[#FD630A]">Energy</span>
-                  </h1>
-                  <p className="text-[10px] text-[#1D1D1D]/50 uppercase tracking-widest mt-1.5 font-bold flex items-center gap-1">
-                    <ShieldCheck size={12} className="text-[#FD630A]" /> Global Trade & Commodity Logistics
-                  </p>
+                <div className="flex items-center gap-4">
+                  {companyLogo && (
+                    <img src={companyLogo} alt="Logo" className="w-16 h-16 object-contain" />
+                  )}
+                  <div>
+                    <h1 className="text-2xl font-black tracking-tight text-[#1D1D1D] leading-none">
+                      {companyName ? companyName.split(' ')[0] : 'Footprints'}
+                      <span className="text-[#FD630A]">
+                        {companyName ? companyName.split(' ').slice(1).join(' ') : 'Energy'}
+                      </span>
+                    </h1>
+                    <p className="text-[10px] text-[#1D1D1D]/50 uppercase tracking-widest mt-1.5 font-bold flex items-center gap-1">
+                      <ShieldCheck size={12} className="text-[#FD630A]" /> Global Trade & Commodity Logistics
+                    </p>
+                    <div className="text-[10px] text-[#1D1D1D]/60 mt-2 font-medium">
+                      {companyAddress.split('\n').map((line, i) => <div key={i}>{line}</div>)}
+                      {companyContact.split('\n').map((line, i) => <div key={i}>{line}</div>)}
+                    </div>
+                  </div>
                 </div>
                 <div className="text-right">
                   <h2 className="text-xl font-bold text-[#1D1D1D]/40 uppercase tracking-widest leading-none mb-2">RECEIPT</h2>

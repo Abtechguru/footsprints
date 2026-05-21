@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Phone, MapPin, Globe, Share2, Clock } from "lucide-react";
+import { LandingSettings, DEFAULT_LANDING_SETTINGS } from "@/lib/landing-settings";
 
-export default function Footer() {
+export default function Footer({ settings = DEFAULT_LANDING_SETTINGS }: { settings?: LandingSettings }) {
   return (
     <footer className="bg-[#F7F3E6] pt-16 lg:pt-24 pb-12 border-t border-[#1D1D1D]/5 relative overflow-hidden">
       {/* Technical Parallel Lines - Normalized Opacity */}
@@ -85,21 +86,21 @@ export default function Footer() {
                   <MapPin size={18} />
                 </div>
                 <span className="text-[#1D1D1D]/70 font-medium leading-relaxed pt-1">
-                  USA | Head Office <br />
-                  <span className="text-[#1D1D1D]/50 text-sm">Mainland Business Park, Tower 2</span>
+                  {settings.contact_address_line1} <br />
+                  <span className="text-[#1D1D1D]/50 text-sm">{settings.contact_address_line2}</span>
                 </span>
               </li>
               <li className="flex items-start space-x-4">
                 <div className="bg-white p-2.5 rounded-lg text-[#FD630A] shadow-sm">
                   <Phone size={18} />
                 </div>
-                <span className="text-[#1D1D1D]/70 font-medium pt-1">+1 (555) 000-0000</span>
+                <span className="text-[#1D1D1D]/70 font-medium pt-1">{settings.contact_phone_primary}</span>
               </li>
               <li className="flex items-start space-x-4">
                 <div className="bg-white p-2.5 rounded-lg text-[#FD630A] shadow-sm">
                   <Mail size={18} />
                 </div>
-                <span className="text-[#1D1D1D]/70 font-medium pt-1">trade@footprintsenergy.com</span>
+                <span className="text-[#1D1D1D]/70 font-medium pt-1">{settings.contact_email_primary}</span>
               </li>
             </ul>
           </div>

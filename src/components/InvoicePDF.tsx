@@ -171,10 +171,15 @@ interface InvoiceData {
   totalAmount: number;
   notes: string;
   origin: string;
+  companyName?: string;
+  companyAddress?: string;
+  companyContact?: string;
+  companyLogo?: string;
 }
 
 export default function InvoicePDF({ data }: { data: InvoiceData }) {
-  const logoUrl = `${data.origin}/images/footsprintLogo.jpeg`;
+  const defaultLogo = `${data.origin}/images/footsprintLogo.jpeg`;
+  const logoUrl = data.companyLogo || defaultLogo;
 
   const formatCurrency = (amount: number) => {
     return '$' + amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -195,7 +200,7 @@ export default function InvoicePDF({ data }: { data: InvoiceData }) {
             <Image src={logoUrl} style={styles.logoImage} />
             <View style={styles.logoTextContainer}>
               <View>
-                <Text style={styles.logoTitle}>Footprints <Text style={styles.logoHighlight}>Energy</Text></Text>
+                <Text style={styles.logoTitle}>{data.companyName ? data.companyName.split(' ')[0] : 'Footprints'} <Text style={styles.logoHighlight}>{data.companyName ? data.companyName.split(' ').slice(1).join(' ') : 'Energy'}</Text></Text>
               </View>
               <View style={{ marginTop: 4 }}>
                 <Text style={{ fontSize: 9, color: '#DAA35D', letterSpacing: 1 }}>GLOBAL COMMODITIES TRADE</Text>
@@ -203,10 +208,22 @@ export default function InvoicePDF({ data }: { data: InvoiceData }) {
             </View>
           </View>
           <View style={styles.companyDetails}>
-            <Text>123 Trade Center Blvd</Text>
-            <Text>New York, NY 10001</Text>
-            <Text>contact@footprintsenergy.com</Text>
-            <Text>+1 (555) 123-4567</Text>
+            {data.companyAddress ? data.companyAddress.split('\n').map((line, i) => (
+              <Text key={`addr-${i}`}>{line}</Text>
+            )) : (
+              <>
+                <Text>123 Trade Center Blvd</Text>
+                <Text>New York, NY 10001</Text>
+              </>
+            )}
+            {data.companyContact ? data.companyContact.split('\n').map((line, i) => (
+              <Text key={`cont-${i}`}>{line}</Text>
+            )) : (
+              <>
+                <Text>contact@footprintsenergy.com</Text>
+                <Text>+1 (555) 123-4567</Text>
+              </>
+            )}
           </View>
         </View>
 

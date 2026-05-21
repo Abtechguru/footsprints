@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
+import { LandingSettings } from "@/lib/landing-settings";
 
-export default function About() {
+export default function About({ settings }: { settings: LandingSettings }) {
   return (
     <section className="py-16 lg:py-24 bg-white border-b border-[#1D1D1D]/5 relative overflow-hidden">
       {/* Bold Wavy Architectural Lines (Inspiration Image 1) - Reduced Opacity */}
@@ -46,47 +48,56 @@ export default function About() {
         {/* Simple Top Label */}
         <div className="flex items-center space-x-4 mb-12 lg:mb-20">
           <div className="h-px w-12 bg-[#FD630A]"></div>
-          <span className="text-[10px] font-bold text-[#DAA35D] uppercase tracking-[0.4em]">Our Mission</span>
+          <span className="text-[10px] font-bold text-[#DAA35D] uppercase tracking-[0.4em]">{settings.about_label}</span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           
-          {/* Left: Balanced Typography */}
-          <div className="space-y-12">
-            <h2 className="text-5xl lg:text-6xl font-semibold text-[#1D1D1D] tracking-tight leading-[1.1]">
-              Leading the way in <br />
-              <span className="text-[#FD630A]">Global Commodity</span> Trade.
-            </h2>
-            
-            <div className="space-y-8 text-lg text-[#1D1D1D]/60 leading-relaxed font-medium max-w-xl">
-              <p>
-                Footprints Energy is a leading commodity trader , specializing in agricultural produce, animal protein and energy derivatives. 
-              </p>
-              <p>
-                We supply commodities such as Sugar (IC45, VHP) , Animal Protein (Chicken, Bovine and Swine) and Grains (Soy, Corn and Coffee). We also facilitate trade of petroleum derivates such as Jet A4, AGO and PMS.
-              </p>
-              <div className="pt-8 border-t border-[#1D1D1D]/5">
-                <p className="text-[#1D1D1D] font-bold text-2xl leading-snug">
-                  At Footprints, we understand our markets, follow trends and proactively take measures to act in the best interest of our customers.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Properly Placed Visual */}
-          <div className="relative group">
-            <div className="relative aspect-square lg:aspect-auto lg:h-[600px] overflow-hidden rounded-sm bg-[#F7F3E6]">
+          {/* Left: Visual Asset */}
+          <div className="relative group order-2 lg:order-1">
+            <div className="relative aspect-square lg:aspect-auto lg:h-[550px] overflow-hidden rounded-sm bg-[#F7F3E6] border border-[#1D1D1D]/5">
               <Image 
-                src="/images/Potentiel-dune-enzyme-eliminant-lexces-de-sucre-pour-le-traitement-du-diabete.jpeg" 
+                src={settings.about_image} 
                 alt="Global Commodity Trade" 
                 fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover grayscale hover:grayscale-0 transition-all duration-1000"
               />
             </div>
             {/* Minimalist Floating Accent */}
-            <div className="absolute bottom-0 left-0 sm:-bottom-8 sm:-left-8 bg-[#FD630A] text-white p-6 sm:p-10 shadow-2xl">
-              <span className="block text-4xl font-bold tracking-tighter">Global</span>
-              <span className="block text-[10px] font-bold uppercase tracking-[0.3em] opacity-80 mt-2">Trading Network</span>
+            <div className="absolute bottom-0 left-0 sm:-bottom-8 sm:-left-8 bg-[#FD630A] text-white p-6 sm:p-8 shadow-2xl">
+              <span className="block text-3xl font-bold tracking-tighter">{settings.about_accent_title}</span>
+              <span className="block text-[10px] font-bold uppercase tracking-[0.3em] opacity-80 mt-2">{settings.about_accent_subtitle}</span>
+            </div>
+          </div>
+
+          {/* Right: Typography */}
+          <div className="space-y-8 order-1 lg:order-2">
+            <h2 className="text-4xl lg:text-5xl font-semibold text-[#1D1D1D] tracking-tight leading-[1.1] uppercase">
+              Who We Are
+            </h2>
+            
+            <div className="space-y-6 text-base text-[#1D1D1D]/70 leading-relaxed font-medium">
+              <p>
+                {settings.about_text_p1}
+              </p>
+              <p>
+                {settings.about_text_p2}
+              </p>
+              <div className="pt-6 border-t border-[#1D1D1D]/5">
+                <p className="text-[#1D1D1D] font-bold text-xl leading-snug italic">
+                  "{settings.about_quote}"
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-4">
+              <Link 
+                href="/about-us" 
+                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#FD630A] hover:text-[#1D1D1D] transition-colors"
+              >
+                <span>Read More &rarr;</span>
+              </Link>
             </div>
           </div>
 
@@ -95,4 +106,3 @@ export default function About() {
     </section>
   );
 }
-

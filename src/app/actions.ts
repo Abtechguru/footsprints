@@ -236,7 +236,7 @@ export async function sendNewsletter(formData: FormData) {
 }
 
 export async function sendReceiptEmail(receiptData: any) {
-  const { buyerEmail, buyerName, receiptNo, date, items, payments, totalCharges, footnotes } = receiptData;
+  const { buyerEmail, buyerName, receiptNo, date, items, payments, totalCharges, footnotes, companyName, companyLogo, companyAddress, companyContact } = receiptData;
 
   if (!buyerEmail) {
     return { success: false, error: "Buyer's email is required." };
@@ -276,6 +276,9 @@ export async function sendReceiptEmail(receiptData: any) {
     </tr>
   `).join("");
 
+  const namePart1 = companyName ? companyName.split(' ')[0] : 'Footprints';
+  const namePart2 = companyName ? companyName.split(' ').slice(1).join(' ') : 'Energy';
+
   try {
     const { Resend } = await import("resend");
     const resend = new Resend(resendApiKey);
@@ -283,14 +286,22 @@ export async function sendReceiptEmail(receiptData: any) {
     const { error: sendError } = await resend.emails.send({
       from: "FootprintsEnergy <receipts@footprints-energy.com>", 
       to: buyerEmail,
-      subject: `Receipt for Order #${receiptNo} - FootprintsEnergy`,
+      subject: `Receipt for Order #${receiptNo} - ${namePart1} ${namePart2}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 30px; border: 1px solid #eee; border-radius: 8px; color: #1D1D1D;">
           <!-- Header -->
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #FD630A; padding-bottom: 20px; margin-bottom: 30px;">
-            <div>
-              <h1 style="color: #1D1D1D; font-size: 28px; font-weight: 800; margin: 0;">Footprints<span style="color: #FD630A;">Energy</span></h1>
-              <p style="font-size: 12px; color: #666; margin: 5px 0 0 0;">Global Commodity & Energy Trade Partner</p>
+            <div style="display: flex; align-items: center; gap: 16px;">
+              ${companyLogo ? `<img src="${companyLogo}" alt="Logo" style="width: 60px; height: 60px; object-fit: contain;" />` : ''}
+              <div>
+                <h1 style="color: #1D1D1D; font-size: 28px; font-weight: 800; margin: 0;">${namePart1}<span style="color: #FD630A;">${namePart2}</span></h1>
+                <p style="font-size: 12px; color: #666; margin: 5px 0 0 0;">Global Commodity & Energy Trade Partner</p>
+                <div style="font-size: 10px; color: #777; margin-top: 8px;">
+                  ${(companyAddress || '').replace(/\n/g, '<br/>')}
+                  <br/>
+                  ${(companyContact || '').replace(/\n/g, '<br/>')}
+                </div>
+              </div>
             </div>
             <div style="text-align: right;">
               <h2 style="font-size: 20px; font-weight: 700; color: #666; margin: 0;">RECEIPT</h2>
@@ -511,6 +522,288 @@ export async function loginAdmin(formData: FormData) {
   } else {
     redirect("/admin");
   }
+}
+
+export async function updateLandingSettings(formData: FormData) {
+  // Read standard text fields
+  const hero_badge = formData.get("hero_badge") as string;
+  const hero_title = formData.get("hero_title") as string;
+  const hero_subtitle = formData.get("hero_subtitle") as string;
+  const hero_button_text = formData.get("hero_button_text") as string;
+  const hero_button_link = formData.get("hero_button_link") as string;
+  const hero_stat1_value = formData.get("hero_stat1_value") as string;
+  const hero_stat1_label = formData.get("hero_stat1_label") as string;
+  const hero_stat2_value = formData.get("hero_stat2_value") as string;
+  const hero_stat2_label = formData.get("hero_stat2_label") as string;
+  const hero_stat3_value = formData.get("hero_stat3_value") as string;
+  const hero_stat3_label = formData.get("hero_stat3_label") as string;
+
+  const about_label = formData.get("about_label") as string;
+  const about_title = formData.get("about_title") as string;
+  const about_text_p1 = formData.get("about_text_p1") as string;
+  const about_text_p2 = formData.get("about_text_p2") as string;
+  const about_quote = formData.get("about_quote") as string;
+  const about_accent_title = formData.get("about_accent_title") as string;
+  const about_accent_subtitle = formData.get("about_accent_subtitle") as string;
+
+  const value_props_label = formData.get("value_props_label") as string;
+  const value_props_title = formData.get("value_props_title") as string;
+  const value_props_desc = formData.get("value_props_desc") as string;
+
+  const process_label = formData.get("process_label") as string;
+  const process_title = formData.get("process_title") as string;
+
+  const contact_phone_primary = formData.get("contact_phone_primary") as string;
+  const contact_phone_secondary = formData.get("contact_phone_secondary") as string;
+  const contact_email_primary = formData.get("contact_email_primary") as string;
+  const contact_email_secondary = formData.get("contact_email_secondary") as string;
+  const contact_address_line1 = formData.get("contact_address_line1") as string;
+  const contact_address_line2 = formData.get("contact_address_line2") as string;
+
+  // Handle lists
+  const valuePropsJson = formData.get("value_props_list_json") as string;
+  const processStepsJson = formData.get("process_steps_list_json") as string;
+
+  let value_props_list = [];
+  try {
+    if (valuePropsJson) value_props_list = JSON.parse(valuePropsJson);
+  } catch (e) {
+    console.error("Error parsing value_props_list", e);
+  }
+
+  let process_steps_list = [];
+  try {
+    if (processStepsJson) process_steps_list = JSON.parse(processStepsJson);
+  } catch (e) {
+    console.error("Error parsing process_steps_list", e);
+  }
+
+  // Handle file uploads
+  const heroImage1File = formData.get("hero_image1_file") as File;
+  const heroImage2File = formData.get("hero_image2_file") as File;
+  const aboutImageFile = formData.get("about_image_file") as File;
+
+  let hero_image1 = formData.get("existing_hero_image1") as string;
+  let hero_image2 = formData.get("existing_hero_image2") as string;
+  let about_image = formData.get("existing_about_image") as string;
+
+  const uploadFile = async (file: File) => {
+    if (file && file.size > 0) {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from('images')
+        .upload(fileName, file, { contentType: file.type });
+      if (uploadError) {
+        console.error(uploadError);
+        return null;
+      }
+      const { data } = supabaseAdmin.storage.from('images').getPublicUrl(fileName);
+      return data.publicUrl;
+    }
+    return null;
+  };
+
+  if (heroImage1File && heroImage1File.size > 0) {
+    const url = await uploadFile(heroImage1File);
+    if (url) hero_image1 = url;
+  }
+  if (heroImage2File && heroImage2File.size > 0) {
+    const url = await uploadFile(heroImage2File);
+    if (url) hero_image2 = url;
+  }
+  if (aboutImageFile && aboutImageFile.size > 0) {
+    const url = await uploadFile(aboutImageFile);
+    if (url) about_image = url;
+  }
+
+  const updatePayload = {
+    hero_badge,
+    hero_title,
+    hero_subtitle,
+    hero_button_text,
+    hero_button_link,
+    hero_stat1_value,
+    hero_stat1_label,
+    hero_stat2_value,
+    hero_stat2_label,
+    hero_stat3_value,
+    hero_stat3_label,
+    hero_image1,
+    hero_image2,
+    about_label,
+    about_title,
+    about_text_p1,
+    about_text_p2,
+    about_quote,
+    about_image,
+    about_accent_title,
+    about_accent_subtitle,
+    value_props_label,
+    value_props_title,
+    value_props_desc,
+    value_props_list,
+    process_label,
+    process_title,
+    process_steps_list,
+    contact_phone_primary,
+    contact_phone_secondary,
+    contact_email_primary,
+    contact_email_secondary,
+    contact_address_line1,
+    contact_address_line2,
+  };
+
+  const { error } = await supabaseAdmin
+    .from("landing_page_settings")
+    .upsert({ id: 1, ...updatePayload });
+
+  if (error) {
+    console.error("Error upserting landing_page_settings:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  return { success: true };
+}
+
+export async function addMediaSession(formData: FormData) {
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const date = formData.get("date") as string;
+  const files = formData.getAll("mediaFiles") as File[];
+
+  if (!title || !date) {
+    return { success: false, error: "Title and Date are required" };
+  }
+
+  const media_urls: Array<{ url: string; type: "image" | "video" }> = [];
+
+  for (const file of files) {
+    if (file && file.size > 0) {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from('images')
+        .upload(fileName, file, { contentType: file.type });
+      
+      if (uploadError) {
+        console.error("Failed to upload file in session:", file.name, uploadError);
+        continue;
+      }
+
+      const { data } = supabaseAdmin.storage.from('images').getPublicUrl(fileName);
+      const isVideo = file.type.startsWith("video/");
+      media_urls.push({
+        url: data.publicUrl,
+        type: isVideo ? "video" : "image"
+      });
+    }
+  }
+
+  const { error } = await supabaseAdmin.from("media_sessions").insert([
+    { title, description, date, media_urls }
+  ]);
+
+  if (error) {
+    console.error("Error inserting media session:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/sessions");
+  revalidatePath("/admin/sessions");
+  return { success: true };
+}
+
+export async function deleteMediaSession(id: string) {
+  const { error } = await supabaseAdmin.from("media_sessions").delete().eq("id", id);
+  if (error) {
+    console.error("Error deleting media session:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/sessions");
+  revalidatePath("/admin/sessions");
+  return { success: true };
+}
+
+export async function updateMediaSession(formData: FormData) {
+  const id = formData.get("id") as string;
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const date = formData.get("date") as string;
+  const existingMediaStr = formData.get("existingMedia") as string;
+  const files = formData.getAll("mediaFiles") as File[];
+
+  if (!id || !title || !date) {
+    return { success: false, error: "ID, Title and Date are required" };
+  }
+
+  let media_urls: Array<{ url: string; type: "image" | "video" }> = [];
+  try {
+    if (existingMediaStr) {
+      media_urls = JSON.parse(existingMediaStr);
+    }
+  } catch (e) {
+    console.error("Failed to parse existing media");
+  }
+
+  for (const file of files) {
+    if (file && file.size > 0) {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from('images')
+        .upload(fileName, file, { contentType: file.type });
+      
+      if (uploadError) {
+        console.error("Failed to upload file in session:", file.name, uploadError);
+        continue;
+      }
+
+      const { data } = supabaseAdmin.storage.from('images').getPublicUrl(fileName);
+      const isVideo = file.type.startsWith("video/");
+      media_urls.push({
+        url: data.publicUrl,
+        type: isVideo ? "video" : "image"
+      });
+    }
+  }
+
+  const { error } = await supabaseAdmin
+    .from("media_sessions")
+    .update({ title, description, date, media_urls })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error updating media session:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/sessions");
+  revalidatePath("/admin/sessions");
+  return { success: true };
+}
+
+export async function uploadLogo(formData: FormData) {
+  const file = formData.get("file") as File;
+  if (!file || file.size === 0) return { success: false, error: "No file provided" };
+  
+  const fileExt = file.name.split('.').pop();
+  const fileName = `logo-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+  
+  const { error: uploadError } = await supabaseAdmin.storage
+    .from('images')
+    .upload(fileName, file, { contentType: file.type });
+    
+  if (uploadError) {
+    console.error("Failed to upload logo:", uploadError);
+    return { success: false, error: uploadError.message };
+  }
+
+  const { data } = supabaseAdmin.storage.from('images').getPublicUrl(fileName);
+  return { success: true, url: data.publicUrl };
 }
 
 
