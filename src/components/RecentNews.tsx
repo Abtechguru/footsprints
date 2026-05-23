@@ -41,7 +41,7 @@ export default async function RecentNews() {
                 className="bg-white border border-[#1D1D1D]/5 hover:border-[#FD630A]/20 hover:shadow-xl transition-all duration-500 flex flex-col group rounded-sm"
               >
                 {/* Visual Preview */}
-                <div className="relative aspect-video overflow-hidden bg-[#F7F3E6] border-b border-[#1D1D1D]/5">
+                <div className="relative aspect-[21/9] overflow-hidden bg-[#F7F3E6] border-b border-[#1D1D1D]/5">
                   {(previewUrl || "").endsWith(".mp4") ? (
                     <video
                       src={previewUrl}
@@ -66,7 +66,7 @@ export default async function RecentNews() {
                 </div>
 
                 {/* Content */}
-                <div className="p-8 flex-1 flex flex-col justify-between space-y-6">
+                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-3">
                     <h4 className="text-xl font-bold text-[#1D1D1D] group-hover:text-[#FD630A] transition-colors leading-snug line-clamp-2 uppercase">
                       {session.title}

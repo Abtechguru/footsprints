@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Calendar, Trash2, Film, Video, Plus, Edit, Image as ImageIcon } from "lucide-react";
 import SubmitButton from "@/components/SubmitButton";
 import Link from "next/link";
-import { updateMediaSession } from "@/app/actions";
+import { updateMediaSession, deleteMediaSession } from "@/app/actions";
 
 export default function SessionClient({ initialSessions, addAction, deleteAction }: { initialSessions: any[], addAction: any, deleteAction: any }) {
   const [sessions, setSessions] = useState(initialSessions);
@@ -123,19 +123,23 @@ export default function SessionClient({ initialSessions, addAction, deleteAction
                     >
                       <Edit size={18} />
                     </button>
-                    <form action={deleteAction}>
-                      <input type="hidden" name="id" value={session.id} />
-                      <button
-                        type="submit"
-                        className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2.5 rounded-lg transition-colors border border-transparent hover:border-red-100 flex items-center justify-center w-full"
-                        title="Delete Session"
-                        onClick={(e) => {
-                          if (!confirm("Delete this session?")) e.preventDefault();
-                        }}
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </form>
+                    <button
+                      type="button"
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2.5 rounded-lg transition-colors border border-transparent hover:border-red-100 flex items-center justify-center w-full"
+                      title="Delete Session"
+                      onClick={async () => {
+                        if (confirm("Delete this session?")) {
+                          const res = await deleteMediaSession(session.id);
+                          if (res?.success || res === undefined) {
+                            window.location.reload();
+                          } else {
+                            alert("Error deleting session.");
+                          }
+                        }
+                      }}
+                    >
+                      <Trash2 size={18} />
+                    </button>
                   </div>
                 </div>
               );

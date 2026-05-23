@@ -38,7 +38,7 @@ export default async function Team() {
               key={member.id} 
               className="group relative"
             >
-              <div className="relative aspect-[4/5] overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
+              <div className="relative aspect-square overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
                 <Image 
                   src={member.image} 
                   alt={member.name} 

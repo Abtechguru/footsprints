@@ -70,7 +70,7 @@ export default function ProductTabs({ products }: { products: Product[] }) {
 
         {/* Right Column: Product Image Showcase */}
         <div className="relative group">
-          <div className="relative aspect-video lg:aspect-square lg:h-[450px] overflow-hidden rounded-sm bg-white border border-[#1D1D1D]/5 shadow-xl">
+          <div className="relative aspect-video lg:aspect-[4/3] lg:max-h-[350px] overflow-hidden rounded-sm bg-white border border-[#1D1D1D]/5 shadow-xl">
             <Image
               src={activeProduct.image || "/images/Black-Pepper.jpeg"}
               alt={activeProduct.name}

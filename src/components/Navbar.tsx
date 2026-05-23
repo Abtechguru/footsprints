@@ -26,9 +26,17 @@ export default function Navbar({ settings = DEFAULT_LANDING_SETTINGS }: { settin
 
       {/* Main Header Brand Area */}
       <div className="relative bg-[#FBFBFA] py-14 px-6 sm:px-12 flex flex-col items-center justify-center border-b border-black/5 overflow-hidden">
-        {/* Ambient Orange Glow */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[500px] h-[250px] bg-[#FD630A] blur-[120px] rounded-full opacity-[0.07]"></div>
+        {/* Ambient Background Watermark */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+          <div className="absolute inset-0 opacity-[0.03] sm:opacity-[0.02]">
+            <Image 
+              src="/images/footsprintLogo.jpeg"
+              alt=""
+              fill
+              className="object-cover sm:object-contain scale-150 sm:scale-100"
+            />
+          </div>
+          <div className="w-[500px] h-[250px] bg-[#FD630A] blur-[120px] rounded-full opacity-[0.05]"></div>
         </div>
 
         <Link href="/" className="relative z-10 flex flex-col items-center justify-center gap-6 text-center group">
@@ -48,14 +56,14 @@ export default function Navbar({ settings = DEFAULT_LANDING_SETTINGS }: { settin
           
           <div className="flex flex-col items-center gap-3">
             {/* Company Name with bold modern weight and tight letter-spacing */}
-            <h1 className="font-sans font-black text-3xl sm:text-[2.5rem] lg:text-[3.25rem] leading-none text-[#111111] tracking-tighter uppercase">
-              Footprints <span className="text-[#FD630A]">Energy</span>
+            <h1 className="font-sans font-black text-3xl sm:text-[2.5rem] lg:text-[3.25rem] leading-none text-[#FD630A] tracking-tighter uppercase">
+              Footprints Energy
             </h1>
             
             {/* Minimalist Divider & Tagline */}
             <div className="flex flex-col items-center gap-3 mt-1">
-              <div className="w-8 h-[2px] bg-gradient-to-r from-transparent via-[#FD630A] to-transparent group-hover:w-16 transition-all duration-500 ease-out"></div>
-              <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-[0.25em] sm:tracking-[0.35em] max-w-md sm:max-w-2xl leading-loose">
+              <div className="w-8 h-[2px] bg-[#FD630A] group-hover:w-16 transition-all duration-500 ease-out"></div>
+              <span className="text-[10px] sm:text-xs font-semibold text-[#FD630A] uppercase tracking-[0.25em] sm:tracking-[0.35em] max-w-md sm:max-w-2xl leading-loose">
                 Specialists in the sourcing and supply of sugar, protein, grains and energy derivatives
               </span>
             </div>

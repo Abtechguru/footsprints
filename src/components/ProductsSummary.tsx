@@ -20,7 +20,8 @@ export default function ProductsSummary({ settings }: { settings: LandingSetting
         {/* Content columns */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
           {/* Left Column: Visual collage representation */}
-          <div className="lg:col-span-6 grid grid-cols-2 gap-4">
+          <div className="lg:col-span-6 flex justify-center">
+            <div className="grid grid-cols-2 gap-4 w-full max-w-sm lg:max-w-md">
             <div className="relative aspect-square overflow-hidden rounded-sm bg-[#F7F3E6] border border-[#1D1D1D]/5">
               {(settings.hero_image1 || "").endsWith(".mp4") ? (
                 <video
@@ -60,7 +61,8 @@ export default function ProductsSummary({ settings }: { settings: LandingSetting
                   className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                 />
               )}
-            </div>
+              </div>
+          </div>
           </div>
 
           {/* Right Column: Text & Button */}
