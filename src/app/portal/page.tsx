@@ -3,7 +3,7 @@ import { createClient as createClientAdmin } from "@supabase/supabase-js";
 import PortalClient from "./PortalClient";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { getLandingSettings } from "@/lib/landing-settings";
+import { getLandingSettings } from "@/lib/landing-settings-api";
 
 export const dynamic = "force-dynamic";
 

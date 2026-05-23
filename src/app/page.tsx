@@ -13,7 +13,7 @@ import ProductsSummary from "@/components/ProductsSummary";
 import Team from "@/components/Team";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
-import { getLandingSettings } from "@/lib/landing-settings";
+import { getLandingSettings } from "@/lib/landing-settings-api";
 
 export default async function Home() {
   const settings = await getLandingSettings();

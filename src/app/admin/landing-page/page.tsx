@@ -1,4 +1,4 @@
-import { getLandingSettings } from "@/lib/landing-settings";
+import { getLandingSettings } from "@/lib/landing-settings-api";
 import LandingEditor from "./LandingEditor";
 
 export const revalidate = 0; // Disable caching

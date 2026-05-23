@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { Package, Users, Eye } from "lucide-react";
 
 export const revalidate = 0; // Disable caching for admin

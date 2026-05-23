@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { deleteProduct, addProduct } from "@/app/actions";
 import Image from "next/image";
 import SubmitButton from "@/components/SubmitButton";

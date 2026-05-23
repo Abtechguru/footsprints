@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, Menu, X } from "lucide-react";
-import { LandingSettings, DEFAULT_LANDING_SETTINGS } from "@/lib/landing-settings";
+import { LandingSettings, DEFAULT_LANDING_SETTINGS } from "@/lib/landing-defaults";
 
 export default function Navbar({ settings = DEFAULT_LANDING_SETTINGS }: { settings?: LandingSettings }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

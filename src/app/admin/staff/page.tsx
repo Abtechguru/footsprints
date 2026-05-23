@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { createClient } from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/components/SubmitButton";

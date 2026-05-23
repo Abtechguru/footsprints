@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { addMediaSession, deleteMediaSession } from "@/app/actions";
 import SubmitButton from "@/components/SubmitButton";
 import { Plus } from "lucide-react";
