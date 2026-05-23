@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Partnership() {
   return (
-    <div className="relative min-h-[50vh] w-full flex items-center justify-center overflow-hidden py-24">
+    <div className="relative w-full flex items-center justify-center overflow-hidden py-20 sm:py-28">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image 

@@ -15,7 +15,7 @@ export default function Process({ settings }: { settings: LandingSettings }) {
   const steps = settings.process_steps_list || [];
 
   return (
-    <section className="py-16 lg:py-24 bg-white border-y border-[#1D1D1D]/5 relative overflow-hidden">
+    <section className="py-10 lg:py-16 bg-white border-y border-[#1D1D1D]/5 relative overflow-hidden">
       {/* Background visual detail */}
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none z-0">
         <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">

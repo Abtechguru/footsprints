@@ -4,7 +4,7 @@ import { LandingSettings } from "@/lib/landing-settings";
 
 export default function About({ settings }: { settings: LandingSettings }) {
   return (
-    <section className="py-16 lg:py-24 bg-white border-b border-[#1D1D1D]/5 relative overflow-hidden">
+    <section className="py-10 lg:py-16 bg-white border-b border-[#1D1D1D]/5 relative overflow-hidden">
       {/* Bold Wavy Architectural Lines (Inspiration Image 1) - Reduced Opacity */}
       <div className="absolute top-0 right-0 w-2/3 h-full opacity-[0.05] pointer-events-none z-0">
         <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
@@ -56,13 +56,24 @@ export default function About({ settings }: { settings: LandingSettings }) {
           {/* Left: Visual Asset */}
           <div className="relative group order-2 lg:order-1">
             <div className="relative aspect-square lg:aspect-auto lg:h-[550px] overflow-hidden rounded-sm bg-[#F7F3E6] border border-[#1D1D1D]/5">
-              <Image 
-                src={settings.about_image} 
-                alt="Global Commodity Trade" 
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover grayscale hover:grayscale-0 transition-all duration-1000"
-              />
+              {(settings.about_image || "").endsWith(".mp4") ? (
+                <video
+                  src={settings.about_image}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-1000"
+                />
+              ) : (
+                <Image 
+                  src={settings.about_image || "/images/Potentiel-dune-enzyme-eliminant-lexces-de-sucre-pour-le-traitement-du-diabete.jpeg"} 
+                  alt="Global Commodity Trade" 
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+                />
+              )}
             </div>
             {/* Minimalist Floating Accent */}
             <div className="absolute bottom-0 left-0 sm:-bottom-8 sm:-left-8 bg-[#FD630A] text-white p-6 sm:p-8 shadow-2xl">

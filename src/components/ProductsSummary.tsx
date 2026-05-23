@@ -4,7 +4,7 @@ import { LandingSettings } from "@/lib/landing-settings";
 
 export default function ProductsSummary({ settings }: { settings: LandingSettings }) {
   return (
-    <section className="py-16 lg:py-24 bg-white border-t border-[#1D1D1D]/5 relative overflow-hidden">
+    <section className="py-10 lg:py-16 bg-white border-t border-[#1D1D1D]/5 relative overflow-hidden">
       <div className="max-w-[90rem] mx-auto px-6 sm:px-12 relative z-10 space-y-16">
         
         {/* Title */}
@@ -22,22 +22,44 @@ export default function ProductsSummary({ settings }: { settings: LandingSetting
           {/* Left Column: Visual collage representation */}
           <div className="lg:col-span-6 grid grid-cols-2 gap-4">
             <div className="relative aspect-square overflow-hidden rounded-sm bg-[#F7F3E6] border border-[#1D1D1D]/5">
-              <Image 
-                src={settings.hero_image1 || "/images/Black-Pepper.jpeg"} 
-                alt="Product 1" 
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
-              />
+              {(settings.hero_image1 || "").endsWith(".mp4") ? (
+                <video
+                  src={settings.hero_image1}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-700"
+                />
+              ) : (
+                <Image 
+                  src={settings.hero_image1 || "/images/Black-Pepper.jpeg"} 
+                  alt="Product 1" 
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                />
+              )}
             </div>
             <div className="relative aspect-square overflow-hidden rounded-sm bg-[#F7F3E6] border border-[#1D1D1D]/5 mt-8">
-              <Image 
-                src={settings.about_image || "/images/Potentiel-dune-enzyme-eliminant-lexces-de-sucre-pour-le-traitement-du-diabete.jpeg"} 
-                alt="Product 2" 
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
-              />
+              {(settings.about_image || "").endsWith(".mp4") ? (
+                <video
+                  src={settings.about_image}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-700"
+                />
+              ) : (
+                <Image 
+                  src={settings.about_image || "/images/Potentiel-dune-enzyme-eliminant-lexces-de-sucre-pour-le-traitement-du-diabete.jpeg"} 
+                  alt="Product 2" 
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                />
+              )}
             </div>
           </div>
 

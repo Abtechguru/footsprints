@@ -109,6 +109,7 @@ export default function ProductsPage() {
                       src={category.products[0].image} 
                       alt={category.products[0].name} 
                       fill 
+                      sizes="(max-width: 1024px) 100vw, 50vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
                     />
                     <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
@@ -161,6 +162,7 @@ export default function ProductsPage() {
                             src={product.image} 
                             alt={product.name} 
                             fill 
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                           />
                           <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>

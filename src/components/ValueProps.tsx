@@ -18,7 +18,7 @@ export default function ValueProps({ settings }: { settings: LandingSettings }) 
   const reasons = settings.value_props_list || [];
 
   return (
-    <section className="py-16 lg:py-24 bg-[#F7F3E6] relative overflow-hidden">
+    <section className="py-10 lg:py-16 bg-[#F7F3E6] relative overflow-hidden">
       {/* Radiating Lines Texture - Normalized Opacity */}
       <div className="absolute top-1/2 left-0 w-full h-full -translate-y-1/2 opacity-[0.03] pointer-events-none z-0">
         <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
@@ -57,13 +57,24 @@ export default function ValueProps({ settings }: { settings: LandingSettings }) 
           {/* Right: Large Product Image */}
           <div className="relative group">
             <div className="relative aspect-video lg:aspect-auto lg:h-[450px] overflow-hidden rounded-sm bg-white border border-[#1D1D1D]/5 shadow-xl">
-              <Image 
-                src={settings.hero_image1 || "/images/Black-Pepper.jpeg"} 
-                alt="Product Sourcing" 
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover grayscale hover:grayscale-0 transition-all duration-1000"
-              />
+              {(settings.hero_image1 || "").endsWith(".mp4") ? (
+                <video
+                  src={settings.hero_image1}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-1000"
+                />
+              ) : (
+                <Image 
+                  src={settings.hero_image1 || "/images/Black-Pepper.jpeg"} 
+                  alt="Product Sourcing" 
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+                />
+              )}
             </div>
           </div>
         </div>

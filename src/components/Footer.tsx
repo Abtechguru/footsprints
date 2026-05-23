@@ -32,6 +32,7 @@ export default function Footer({ settings = DEFAULT_LANDING_SETTINGS }: { settin
                   src="/images/footsprintLogo.jpeg" 
                   alt="Footprints Energy Logo" 
                   fill
+                  sizes="48px"
                   className="object-contain"
                 />
               </div>

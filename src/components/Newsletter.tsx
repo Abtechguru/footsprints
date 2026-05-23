@@ -29,7 +29,7 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="py-16 lg:py-24 bg-white px-6 sm:px-12">
+    <section className="py-10 lg:py-16 bg-white px-6 sm:px-12">
       <div 
         className="max-w-6xl mx-auto bg-[#1D1D1D] rounded-3xl lg:rounded-[3rem] p-8 sm:p-12 lg:p-24 relative overflow-hidden text-center flex flex-col items-center"
       >

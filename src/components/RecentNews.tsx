@@ -12,7 +12,7 @@ export default async function RecentNews() {
   const safeSessions = sessions || [];
 
   return (
-    <section className="py-16 lg:py-24 bg-[#F7F3E6] border-t border-[#1D1D1D]/5">
+    <section className="py-10 lg:py-16 bg-[#F7F3E6] border-t border-[#1D1D1D]/5">
       <div className="max-w-[90rem] mx-auto px-6 sm:px-12 space-y-16">
         
         {/* Section Title */}
@@ -42,13 +42,24 @@ export default async function RecentNews() {
               >
                 {/* Visual Preview */}
                 <div className="relative aspect-video overflow-hidden bg-[#F7F3E6] border-b border-[#1D1D1D]/5">
-                  <Image 
-                    src={previewUrl} 
-                    alt={session.title} 
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
+                  {(previewUrl || "").endsWith(".mp4") ? (
+                    <video
+                      src={previewUrl}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
+                    />
+                  ) : (
+                    <Image 
+                      src={previewUrl} 
+                      alt={session.title} 
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  )}
                   <div className="absolute top-4 left-4 bg-white/95 px-3 py-1 text-[9px] font-bold text-[#1D1D1D] uppercase tracking-wider rounded-sm shadow-sm">
                     {new Date(session.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </div>

@@ -75,6 +75,7 @@ export default function ProductTabs({ products }: { products: Product[] }) {
               src={activeProduct.image || "/images/Black-Pepper.jpeg"}
               alt={activeProduct.name}
               fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover transition-all duration-700 ease-out"
               key={activeProduct.id} // Forces image animation on change
             />

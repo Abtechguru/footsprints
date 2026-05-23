@@ -3,16 +3,27 @@ import { LandingSettings } from "@/lib/landing-settings";
 
 export default function MiddleBanner({ settings }: { settings: LandingSettings }) {
   return (
-    <div className="relative min-h-[40vh] w-full flex items-center justify-center overflow-hidden py-20">
+    <div className="relative w-full flex items-center justify-center overflow-hidden py-20 sm:py-28">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <Image 
-          src={settings.about_image || "/images/Potentiel-dune-enzyme-eliminant-lexces-de-sucre-pour-le-traitement-du-diabete.jpeg"} 
-          alt="Footprints Sourcing Fields" 
-          fill
-          sizes="100vw"
-          className="object-cover brightness-50"
-        />
+        {(settings.about_image || "").endsWith(".mp4") ? (
+          <video
+            src={settings.about_image}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="object-cover w-full h-full brightness-50"
+          />
+        ) : (
+          <Image 
+            src={settings.about_image || "/images/Potentiel-dune-enzyme-eliminant-lexces-de-sucre-pour-le-traitement-du-diabete.jpeg"} 
+            alt="Footprints Sourcing Fields" 
+            fill
+            sizes="100vw"
+            className="object-cover brightness-50"
+          />
+        )}
       </div>
 
       {/* Overlay Text */}

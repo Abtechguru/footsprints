@@ -271,72 +271,86 @@ export default function PortalClient({
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-[#1D1D1D]/5 overflow-hidden min-h-[600px] flex flex-col md:flex-row">
       
-      {/* Sidebar Panel */}
-      <div className="w-full md:w-80 bg-[#1D1D1D] text-white flex flex-col p-6 border-r border-[#1D1D1D]/10">
-        <div className="pb-6 border-b border-white/10 mb-6">
-          <h2 className="text-lg font-black text-white">Client Portal</h2>
-          <p className="text-white/40 text-[10px] uppercase font-bold tracking-widest mt-1">Logged In As</p>
-          <p className="text-xs font-medium text-[#DAA35D] break-all">{user.email}</p>
+      {/* Sidebar Panel / Top Nav on Mobile */}
+      <div className="w-full md:w-80 bg-[#1D1D1D] text-white flex flex-col p-4 md:p-6 md:border-r border-[#FD630A]/20 relative overflow-hidden shrink-0">
+        <div className="absolute top-0 left-0 w-32 h-32 bg-[#FD630A] opacity-10 blur-[50px] rounded-full pointer-events-none"></div>
+        
+        <div className="pb-4 md:pb-6 border-b border-white/10 mb-4 md:mb-6 flex justify-between items-center md:block">
+          <div>
+            <h2 className="text-xl md:text-2xl font-black text-white relative z-10 flex items-center gap-2">
+              <div className="w-2 h-6 bg-[#FD630A] rounded-full"></div>
+              Client Portal
+            </h2>
+            <p className="text-white/40 text-[10px] uppercase font-bold tracking-widest mt-2 hidden md:block">Logged In As</p>
+            <p className="text-xs font-medium text-[#FD630A] break-all hidden md:block mt-1">{user.email}</p>
+          </div>
+          <div className="md:hidden">
+            <form action={signOutClient}>
+              <button type="submit" className="text-xs font-bold bg-white/10 hover:bg-red-500/20 text-red-400 p-2 rounded-lg transition-colors">
+                <LogOut size={16} />
+              </button>
+            </form>
+          </div>
         </div>
 
-        <nav className="flex-1 space-y-2">
+        <nav className="flex md:flex-col gap-2 md:space-y-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0 snap-x hide-scrollbar">
           <button
             onClick={() => setActiveTab("order")}
-            className={`w-full flex items-center space-x-3 px-4 py-3.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all text-left ${
+            className={`flex items-center space-x-2 md:space-x-3 px-4 py-3 md:py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center ${
               activeTab === "order" 
-                ? "bg-[#FD630A] text-white" 
-                : "hover:bg-white/5 text-white/70 hover:text-white"
+                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20" 
+                : "hover:bg-white/5 text-white/60 hover:text-white"
             }`}
           >
-            <ShoppingBag size={16} />
+            <ShoppingBag size={18} />
             <span>Place Order</span>
           </button>
 
           <button
             onClick={() => setActiveTab("orders")}
-            className={`w-full flex items-center space-x-3 px-4 py-3.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all text-left ${
+            className={`flex items-center space-x-2 md:space-x-3 px-4 py-3 md:py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center ${
               activeTab === "orders" 
-                ? "bg-[#FD630A] text-white" 
-                : "hover:bg-white/5 text-white/70 hover:text-white"
+                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20" 
+                : "hover:bg-white/5 text-white/60 hover:text-white"
             }`}
           >
-            <Activity size={16} />
+            <Activity size={18} />
             <span>My Orders ({ordersList.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab("invoices")}
-            className={`w-full flex items-center space-x-3 px-4 py-3.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all text-left ${
+            className={`flex items-center space-x-2 md:space-x-3 px-4 py-3 md:py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center ${
               activeTab === "invoices" 
-                ? "bg-[#FD630A] text-white" 
-                : "hover:bg-white/5 text-white/70 hover:text-white"
+                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20" 
+                : "hover:bg-white/5 text-white/60 hover:text-white"
             }`}
           >
-            <FileText size={16} />
+            <FileText size={18} />
             <span>Invoices ({invoicesList.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab("chat")}
-            className={`w-full flex items-center space-x-3 px-4 py-3.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all text-left ${
+            className={`flex items-center space-x-2 md:space-x-3 px-4 py-3 md:py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center ${
               activeTab === "chat" 
-                ? "bg-[#FD630A] text-white" 
-                : "hover:bg-white/5 text-white/70 hover:text-white"
+                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20" 
+                : "hover:bg-white/5 text-white/60 hover:text-white"
             }`}
           >
-            <MessageSquare size={16} />
+            <MessageSquare size={18} />
             <span>Desk Chat</span>
           </button>
         </nav>
 
-        <div className="pt-6 border-t border-white/10 mt-6">
+        <div className="pt-6 border-t border-white/10 mt-auto hidden md:block">
           <form action={signOutClient}>
             <button
               type="submit"
-              className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg font-bold text-xs uppercase tracking-wider text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all text-left"
+              className="w-full flex items-center justify-center space-x-2 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider text-red-400 hover:text-red-300 bg-white/5 hover:bg-red-500/10 transition-all border border-white/5 hover:border-red-500/20"
             >
               <LogOut size={16} />
-              <span>Log Out</span>
+              <span>Log Out Portal</span>
             </button>
           </form>
         </div>

@@ -187,7 +187,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       {/* --- HERO / BREADCRUMB --- */}
       <section className="relative pt-40 pb-20 bg-[#1D1D1D] text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-           <Image src={product.image} alt="" fill className="object-cover blur-xl scale-110" />
+           <Image src={product.image} alt="" fill sizes="100vw" className="object-cover blur-xl scale-110" />
         </div>
         <div className="max-w-[90rem] mx-auto px-6 sm:px-12 relative z-10">
           <Link href="/products" className="inline-flex items-center space-x-2 text-[#FD630A] text-xs font-bold uppercase tracking-widest mb-8 hover:translate-x-[-4px] transition-transform">
@@ -213,7 +213,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             {/* Image Gallery Mockup */}
             <div className="space-y-8">
               <div className="relative aspect-[4/3] rounded-sm overflow-hidden shadow-2xl bg-white group">
-                <Image src={product.image} alt={product.name} fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+                <Image src={product.image} alt={product.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover group-hover:scale-105 transition-transform duration-1000" />
                 <div className="absolute top-6 right-6 bg-white/90 p-3 rounded-full shadow-lg">
                    <Globe size={18} className="text-[#1D1D1D]" />
                 </div>
@@ -344,7 +344,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                <div key={idx} className="group cursor-pointer">
                  <Link href={`/products/${p.id}`}>
                     <div className="relative aspect-square overflow-hidden rounded-sm mb-6 shadow-lg">
-                      <Image src={p.image} alt={p.name} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                      <Image src={p.image} alt={p.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-700" />
                       <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
                     </div>
                     <h4 className="text-lg font-bold text-[#1D1D1D] group-hover:text-[#FD630A] transition-colors">{p.name}</h4>

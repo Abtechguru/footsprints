@@ -656,7 +656,8 @@ export async function updateLandingSettings(formData: FormData) {
 
   const { error } = await supabaseAdmin
     .from("landing_page_settings")
-    .upsert({ id: 1, ...updatePayload });
+    .update(updatePayload)
+    .eq("id", 1);
 
   if (error) {
     console.error("Error upserting landing_page_settings:", error);
@@ -806,6 +807,66 @@ export async function uploadLogo(formData: FormData) {
   return { success: true, url: data.publicUrl };
 }
 
+export async function uploadDocumentAsset(formData: FormData) {
+  const file = formData.get("file") as File;
+  const type = formData.get("type") as string || "asset";
+  if (!file || file.size === 0) return { success: false, error: "No file provided" };
+  
+  const fileExt = file.name.split('.').pop();
+  const fileName = `doc-${type}-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+  
+  const { error: uploadError } = await supabaseAdmin.storage
+    .from('images')
+    .upload(fileName, file, { contentType: file.type });
+    
+  if (uploadError) {
+    console.error(`Failed to upload ${type}:`, uploadError);
+    return { success: false, error: uploadError.message };
+  }
+
+  const { data } = supabaseAdmin.storage.from('images').getPublicUrl(fileName);
+  return { success: true, url: data.publicUrl };
+}
+
+import crypto from 'crypto';
+
+const ALGORITHM = 'aes-256-cbc';
+const ENCRYPTION_KEY = crypto.scryptSync(process.env.ENCRYPTION_KEY || "foodprints-secret-vault-key", "salt", 32); 
+const IV_LENGTH = 16;
+
+export async function uploadEncryptedVaultDocument(formData: FormData) {
+  const file = formData.get("file") as File;
+  if (!file || file.size === 0) return { success: false, error: "No file provided" };
+  
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    
+    // Encrypt the buffer
+    const iv = crypto.randomBytes(IV_LENGTH);
+    const cipher = crypto.createCipheriv(ALGORITHM, Buffer.from(ENCRYPTION_KEY), iv);
+    let encrypted = cipher.update(buffer);
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+    
+    // Prefix IV to encrypted data so we can decrypt later
+    const encryptedFileBuffer = Buffer.concat([iv, encrypted]);
+    const fileExt = file.name.split('.').pop();
+    const encryptedFileName = `vault-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}.enc`;
+
+    // Upload to Supabase 
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from('images')
+      .upload(encryptedFileName, encryptedFileBuffer, { contentType: 'application/octet-stream' });
+      
+    if (uploadError) throw uploadError;
+
+    return { success: true, fileName: encryptedFileName, originalName: file.name };
+  } catch (err: any) {
+    console.error("Vault Encryption Error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
 export async function signUpClient(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
@@ -941,6 +1002,37 @@ export async function updateOrderStatus(orderId: string, status: string) {
   revalidatePath("/admin/orders");
   return { success: true };
 }
+
+export async function saveDocumentDraft(formData: FormData) {
+  const mode = formData.get("mode") as string;
+  const content = formData.get("content") as string;
+  const signatureUrl = formData.get("signatureUrl") as string;
+  const signaturePos = formData.get("signaturePos") as string;
+  
+  if (!mode) return { success: false, error: "Mode is required" };
+
+  try {
+    const { error } = await supabaseAdmin
+      .from("document_drafts")
+      .upsert({ 
+        id: mode,
+        mode,
+        content,
+        signature_url: signatureUrl,
+        signature_pos: signaturePos,
+        updated_at: new Date().toISOString()
+      });
+
+    if (error) {
+      console.error("Error saving document draft:", error);
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
 
 
 
