@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { LandingSettings } from "@/lib/landing-settings";
 
 export default function MiddleBanner({ settings }: { settings: LandingSettings }) {
@@ -27,10 +28,21 @@ export default function MiddleBanner({ settings }: { settings: LandingSettings }
       </div>
 
       {/* Overlay Text */}
-      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-4">
         <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight uppercase leading-tight">
-          Specialists in the sourcing and supply of sugar, proteins, grains and energy derivatives.
+          READY TO PARTNER WITH US?
         </h2>
+        <p className="text-white text-lg font-medium">
+          Experience premium global sourcing with Footprints Energy.
+        </p>
+        <div className="pt-4">
+          <Link 
+            href="/contact" 
+            className="inline-block bg-[#FD630A] text-white font-bold uppercase text-xs px-8 py-3.5 tracking-wider hover:bg-[#e05304] transition-colors"
+          >
+            Contact Us Today
+          </Link>
+        </div>
       </div>
     </div>
   );

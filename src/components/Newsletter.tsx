@@ -29,9 +29,9 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="py-10 lg:py-16 bg-white px-6 sm:px-12">
+    <section className="py-8 lg:py-12 bg-white px-6 sm:px-12">
       <div 
-        className="max-w-6xl mx-auto bg-[#1D1D1D] rounded-3xl lg:rounded-[3rem] p-8 sm:p-12 lg:p-24 relative overflow-hidden text-center flex flex-col items-center"
+        className="max-w-5xl mx-auto bg-[#1D1D1D] rounded-2xl lg:rounded-[2rem] p-6 sm:p-8 lg:p-12 relative overflow-hidden text-center flex flex-col items-center"
       >
         {/* Background Accents */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#FD630A]/20 blur-[100px]"></div>
@@ -45,11 +45,11 @@ export default function Newsletter() {
         </div>
 
         <div className="relative z-10 max-w-2xl">
-          <h2 className="text-sm font-bold text-[#FD630A] uppercase tracking-[0.4em] mb-6">Get Updates</h2>
-          <h3 className="text-4xl lg:text-6xl font-semibold text-white tracking-tight leading-[1.1] mb-8">
+          <h2 className="text-sm font-bold text-[#FD630A] uppercase tracking-[0.4em] mb-3">Get Updates</h2>
+          <h3 className="text-3xl lg:text-5xl font-semibold text-white tracking-tight leading-[1.1] mb-4">
             Subscribe to our newsletter <br /> <span className="text-white/40 italic">and get a discount</span>
           </h3>
-          <p className="text-xl text-white/60 mb-12 font-medium">
+          <p className="text-lg text-white/60 mb-8 font-medium">
             Subscribe to our newsletter for the latest commodity price trends and trade opportunities.
           </p>
 

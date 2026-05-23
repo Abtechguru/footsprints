@@ -6,7 +6,7 @@ export default async function Team() {
   const { data: team } = await supabase.from("team_members").select("*").order("created_at", { ascending: true });
 
   return (
-    <section className="py-10 lg:py-16 bg-white relative overflow-hidden">
+    <section className="py-8 lg:py-12 bg-white relative overflow-hidden">
       {/* Bold Wavy Architectural Lines (Inspiration Image 1) - Normalized Opacity */}
       <div className="absolute top-0 left-0 w-full h-full opacity-[0.05] pointer-events-none z-0">
         <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">

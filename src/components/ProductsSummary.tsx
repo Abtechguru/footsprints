@@ -4,7 +4,7 @@ import { LandingSettings } from "@/lib/landing-settings";
 
 export default function ProductsSummary({ settings }: { settings: LandingSettings }) {
   return (
-    <section className="py-10 lg:py-16 bg-white border-t border-[#1D1D1D]/5 relative overflow-hidden">
+    <section className="py-8 lg:py-12 bg-white border-t border-[#1D1D1D]/5 relative overflow-hidden">
       <div className="max-w-[90rem] mx-auto px-6 sm:px-12 relative z-10 space-y-16">
         
         {/* Title */}

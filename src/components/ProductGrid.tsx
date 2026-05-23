@@ -11,7 +11,7 @@ export default async function ProductGrid() {
   const safeProducts = products || [];
 
   return (
-    <section className="py-10 lg:py-16 bg-[#F7F3E6] relative overflow-hidden">
+    <section className="py-8 lg:py-12 bg-[#F7F3E6] relative overflow-hidden">
       {/* Wavy Flowing Lines (Inspiration Image 1) - Softened */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0">
         <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" className="w-full h-full rotate-90">

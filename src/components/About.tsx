@@ -4,7 +4,7 @@ import { LandingSettings } from "@/lib/landing-settings";
 
 export default function About({ settings }: { settings: LandingSettings }) {
   return (
-    <section className="py-10 lg:py-16 bg-white border-b border-[#1D1D1D]/5 relative overflow-hidden">
+    <section className="py-8 lg:py-12 bg-white border-b border-[#1D1D1D]/5 relative overflow-hidden">
       {/* Bold Wavy Architectural Lines (Inspiration Image 1) - Reduced Opacity */}
       <div className="absolute top-0 right-0 w-2/3 h-full opacity-[0.05] pointer-events-none z-0">
         <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">

@@ -12,7 +12,7 @@ export default async function RecentNews() {
   const safeSessions = sessions || [];
 
   return (
-    <section className="py-10 lg:py-16 bg-[#F7F3E6] border-t border-[#1D1D1D]/5">
+    <section className="py-8 lg:py-12 bg-[#F7F3E6] border-t border-[#1D1D1D]/5">
       <div className="max-w-[90rem] mx-auto px-6 sm:px-12 space-y-16">
         
         {/* Section Title */}
