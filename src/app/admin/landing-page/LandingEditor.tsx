@@ -603,13 +603,13 @@ export default function LandingEditor({ initialSettings }: LandingEditorProps) {
               </div>
 
               <div className="flex flex-col space-y-2">
-                <label className="text-sm font-bold text-[#1D1D1D]/70">Secondary Phone Number</label>
+                <label className="text-sm font-bold text-[#1D1D1D]/70">Social Website Link (Globe Icon)</label>
                 <input
                   type="text"
                   name="contact_phone_secondary"
                   value={settings.contact_phone_secondary || ""}
                   onChange={handleChange}
-                  placeholder="e.g. +234 810 568 2872"
+                  placeholder="e.g. https://footprints-energy.com"
                   className="border border-[#1D1D1D]/10 rounded-lg px-4 py-3 focus:outline-none focus:border-[#FD630A] text-sm"
                 />
               </div>
@@ -627,13 +627,13 @@ export default function LandingEditor({ initialSettings }: LandingEditorProps) {
               </div>
 
               <div className="flex flex-col space-y-2">
-                <label className="text-sm font-bold text-[#1D1D1D]/70">Secondary Email (Info)</label>
+                <label className="text-sm font-bold text-[#1D1D1D]/70">Social Email Link (Mail Icon)</label>
                 <input
                   type="email"
                   name="contact_email_secondary"
                   value={settings.contact_email_secondary || ""}
                   onChange={handleChange}
-                  placeholder="e.g. info@footprintsenergy.com"
+                  placeholder="e.g. info@footprintenergy.com"
                   className="border border-[#1D1D1D]/10 rounded-lg px-4 py-3 focus:outline-none focus:border-[#FD630A] text-sm"
                 />
               </div>

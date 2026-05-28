@@ -236,7 +236,7 @@ export async function sendNewsletter(formData: FormData) {
 }
 
 export async function sendReceiptEmail(receiptData: any) {
-  const { buyerEmail, buyerName, receiptNo, date, items, payments, totalCharges, footnotes, companyName, companyLogo, companyAddress, companyContact } = receiptData;
+  const { origin, buyerEmail, buyerName, receiptNo, date, items, payments, totalCharges, footnotes, companyName, companyLogo, companyAddress, companyContact, bankDetails } = receiptData;
 
   if (!buyerEmail) {
     return { success: false, error: "Buyer's email is required." };
@@ -359,6 +359,23 @@ export async function sendReceiptEmail(receiptData: any) {
               ${paymentRows}
             </tbody>
           </table>
+
+          <!-- Bank Details -->
+          ${bankDetails ? `
+          <div style="background-color: #F0F4F8; padding: 15px; border-radius: 6px; margin-bottom: 30px;">
+            <h4 style="font-size: 12px; text-transform: uppercase; color: #1D1D1D; margin: 0 0 8px 0;">Payment / Bank Details</h4>
+            <p style="font-size: 12px; color: #555; line-height: 1.5; margin: 0; white-space: pre-line;">
+              ${bankDetails}
+            </p>
+          </div>
+          ` : ''}
+
+          <!-- Signature -->
+          <div style="margin-top: 40px; text-align: right; padding-right: 20px;">
+            <img src="${origin || 'https://footprints-energy.com'}/images/signaturee.png" alt="Signature" style="height: 60px; object-fit: contain;" />
+            <h4 style="font-size: 14px; font-weight: bold; color: #1D1D1D; margin: 10px 0 2px 0;">Moyosore Atobatele</h4>
+            <p style="font-size: 11px; color: #555; margin: 0;">Executive Director</p>
+          </div>
 
           <!-- Footnotes -->
           <div style="border-top: 1px dashed #ddd; padding-top: 20px;">

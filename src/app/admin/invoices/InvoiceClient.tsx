@@ -40,6 +40,7 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
     companyAddress: "123 Trade Center Blvd\nNew York, NY 10001",
     companyContact: "contact@footprintsenergy.com\n+1 (555) 123-4567",
     companyLogo: "",
+    bankDetails: "Acct Name : Footprints Energy Inc\nBank: Bank of America\nAcct No: 4881 3467 4843\nRouting: 111000025\nWire: 026009593\nSwift : BOFAUS3N",
   });
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +116,8 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
         unitPrice: Number(item.unitPrice)
       })),
       totalAmount: totalAmount,
-      notes: formData.notes
+      notes: formData.notes,
+      bankDetails: formData.bankDetails
     };
   };
 
@@ -200,6 +202,7 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
                   companyAddress: "123 Trade Center Blvd\nNew York, NY 10001",
                   companyContact: "contact@footprintsenergy.com\n+1 (555) 123-4567",
                   companyLogo: "",
+                  bankDetails: "Acct Name : Footprints Energy Inc\nBank: Bank of America\nAcct No: 4881 3467 4843\nRouting: 111000025\nWire: 026009593\nSwift : BOFAUS3N",
                 });
                 setItems([{ id: "1", productName: products[0]?.name || "ICUMSA 45 Sugar", quantity: "100 MT", unitPrice: 450 }]);
                 setPdfReady(false);
@@ -262,6 +265,11 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
               <div className="flex flex-col space-y-2 mt-4">
                 <label className="text-sm font-bold text-[#1D1D1D]/70">Company Address</label>
                 <textarea name="companyAddress" value={formData.companyAddress} onChange={(e) => { handleChange(e); }} rows={2} className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#FD630A] text-xs resize-none" />
+              </div>
+
+              <div className="flex flex-col space-y-2 mt-4">
+                <label className="text-sm font-bold text-[#1D1D1D]/70">Bank Account Details</label>
+                <textarea name="bankDetails" value={formData.bankDetails} onChange={(e) => { handleChange(e); }} rows={6} className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#FD630A] text-xs resize-none" />
               </div>
             </div>
 

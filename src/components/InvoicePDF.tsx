@@ -5,20 +5,20 @@ import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/render
 
 const styles = StyleSheet.create({
   page: {
-    padding: 50,
+    padding: 30,
     fontFamily: 'Helvetica',
-    fontSize: 11,
-    color: '#1D1D1D',
+    fontSize: 8,
+    color: '#000000',
     backgroundColor: '#FFFFFF',
-    lineHeight: 1.5,
+    lineHeight: 1.3,
   },
   watermarkContainer: {
     position: 'absolute',
-    top: '30%',
-    left: '20%',
-    width: '60%',
-    height: '40%',
-    opacity: 0.05, // very light watermark
+    top: '25%',
+    left: '15%',
+    width: '70%',
+    height: '50%',
+    opacity: 0.05,
     zIndex: -1
   },
   watermarkImage: {
@@ -26,132 +26,194 @@ const styles = StyleSheet.create({
     height: '100%',
     objectFit: 'contain'
   },
-  header: {
+  topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 40,
-    borderBottom: '2px solid #FD630A',
-    paddingBottom: 20
-  },
-  logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   logoImage: {
-    width: 60,
-    height: 60,
-    marginRight: 15,
+    width: 80,
+    height: 80,
+    objectFit: 'contain'
   },
-  logoTextContainer: {
-    flexDirection: 'column',
-  },
-  logoTitle: {
-    fontSize: 24,
+  cnpjText: {
     fontFamily: 'Helvetica-Bold',
-    color: '#1D1D1D',
-    letterSpacing: -0.5,
+    fontSize: 8,
+    marginTop: 20
   },
-  logoHighlight: {
-    color: '#FD630A',
-  },
-  companyDetails: {
-    textAlign: 'right',
-    fontSize: 9,
-    color: '#4A4A4A',
-  },
-  documentTitle: {
-    fontSize: 22,
-    fontFamily: 'Helvetica-Bold',
-    marginBottom: 30,
+  titleCenter: {
     textAlign: 'center',
-    textTransform: 'uppercase',
-    letterSpacing: 2,
-    color: '#1D1D1D'
+    marginTop: -10,
   },
-  metaDataContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 30,
-  },
-  clientSection: {
-    width: '50%',
-  },
-  metaSection: {
-    width: '40%',
-    textAlign: 'right'
-  },
-  sectionTitle: {
-    fontSize: 10,
+  proformaTitle: {
+    fontSize: 16,
     fontFamily: 'Helvetica-Bold',
-    color: '#DAA35D',
-    textTransform: 'uppercase',
-    marginBottom: 5,
     letterSpacing: 1
   },
-  boldText: {
+  invoiceNoBoxContainer: {
+    alignItems: 'flex-end',
+    marginTop: 5,
+  },
+  invoiceNoBox: {
+    border: '1px solid #000000',
+    padding: '4px 8px',
     fontFamily: 'Helvetica-Bold',
+    fontSize: 9,
   },
-  table: {
-    width: '100%',
-    marginBottom: 30,
-  },
-  tableHeaderRow: {
+  metaContainer: {
     flexDirection: 'row',
-    backgroundColor: '#1D1D1D',
-    color: '#FFFFFF',
-    padding: 8,
+    marginTop: 25,
+    justifyContent: 'space-between'
+  },
+  metaCol1: {
+    width: '25%',
+  },
+  metaRowText: {
+    flexDirection: 'row',
+    marginBottom: 3
+  },
+  metaLabel: {
+    color: '#00509E',
     fontFamily: 'Helvetica-Bold',
-    fontSize: 10,
+    width: 80,
   },
-  tableRow: {
+  metaValue: {
+    fontFamily: 'Helvetica',
+  },
+  metaCol2: {
+    width: '35%',
     flexDirection: 'row',
-    borderBottom: '1px solid #E5E5E5',
+  },
+  metaCol3: {
+    width: '35%',
+    flexDirection: 'row',
+  },
+  yellowTag: {
+    backgroundColor: '#FDE047',
+    color: '#EF4444',
+    padding: '2px 4px',
+    fontFamily: 'Helvetica-Bold',
+    fontSize: 7,
+    height: 12,
+    marginRight: 6,
+  },
+  metaAddressText: {
+    flex: 1,
+    fontSize: 7,
+    lineHeight: 1.4,
+    textTransform: 'uppercase'
+  },
+
+  // Green Table
+  greenTableContainer: {
+    marginTop: 25,
+  },
+  greenTableHeaders: {
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  greenColHeader: {
+    color: '#00509E',
+    fontFamily: 'Helvetica-Bold',
+    fontSize: 7,
+    textAlign: 'center',
+  },
+  greenTableBody: {
+    flexDirection: 'row',
+    backgroundColor: '#86EFAC',
+  },
+  greenCell: {
+    border: '1px solid #000000',
+    padding: 5,
+    fontSize: 7,
+    fontFamily: 'Helvetica-Bold',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    justifyContent: 'center',
+  },
+  
+  // Items Table
+  itemsTableContainer: {
+    marginTop: 25,
+  },
+  itemsTableHeaders: {
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  itemsColHeader: {
+    color: '#00509E',
+    fontFamily: 'Helvetica-Bold',
+    fontSize: 7,
+  },
+  itemsRow: {
+    flexDirection: 'row',
+    borderTop: '1px solid #000000',
+    borderLeft: '1px solid #000000',
+    borderRight: '1px solid #000000',
+  },
+  itemsCell: {
+    padding: 6,
+    fontSize: 8,
+    borderRight: '1px solid #000000',
+    textTransform: 'uppercase',
+    justifyContent: 'center',
+  },
+  itemsCellLast: {
+    padding: 6,
+    fontSize: 8,
+    justifyContent: 'center',
+  },
+  itemsTotalRow: {
+    flexDirection: 'row',
+    border: '1px solid #000000',
+  },
+  
+  // Bank Details
+  bankTitle: {
+    backgroundColor: '#86EFAC',
+    padding: '3px 8px',
+    fontFamily: 'Helvetica-Bold',
+    fontSize: 8,
+    alignSelf: 'flex-start',
+    marginTop: 20,
+    marginBottom: 5,
+    border: '1px solid #86EFAC'
+  },
+  bankBox: {
+    border: '1px solid #000000',
     padding: 10,
   },
-  colDesc: { width: '40%' },
-  colQty: { width: '20%', textAlign: 'center' },
-  colPrice: { width: '20%', textAlign: 'right' },
-  colTotal: { width: '20%', textAlign: 'right', fontFamily: 'Helvetica-Bold' },
-  
-  summaryBox: {
-    alignSelf: 'flex-end',
-    width: '40%',
-    borderTop: '2px solid #1D1D1D',
-    paddingTop: 10,
-    marginTop: 10,
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  summaryTotalRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 5,
-    paddingTop: 5,
-    borderTop: '1px solid #E5E5E5',
-    fontFamily: 'Helvetica-Bold',
-    fontSize: 14,
-    color: '#FD630A'
-  },
-  notesSection: {
-    marginTop: 40,
-    padding: 15,
-    backgroundColor: '#F7F3E6',
-    borderRadius: 4,
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 40,
-    left: 50,
-    right: 50,
-    textAlign: 'center',
+  bankLine: {
     fontSize: 8,
-    color: '#999999',
-    borderTop: '1px solid #E5E5E5',
-    paddingTop: 10
+    marginBottom: 3,
+    textTransform: 'uppercase'
+  },
+  
+  // Signature
+  signatureContainer: {
+    marginTop: 25,
+    alignItems: 'flex-end',
+    paddingRight: 20
+  },
+  
+  // Footer
+  footerContainer: {
+    position: 'absolute',
+    bottom: 30,
+    left: 30,
+    right: 30,
+    textAlign: 'center',
+  },
+  footerCompany: {
+    fontFamily: 'Helvetica-Bold',
+    fontSize: 9,
+    textTransform: 'uppercase'
+  },
+  footerDetails: {
+    fontSize: 7,
+    marginTop: 3,
+    textTransform: 'uppercase',
+    color: '#4A4A4A'
   }
 });
 
@@ -175,6 +237,7 @@ interface InvoiceData {
   companyAddress?: string;
   companyContact?: string;
   companyLogo?: string;
+  bankDetails?: string;
 }
 
 export default function InvoicePDF({ data }: { data: InvoiceData }) {
@@ -182,8 +245,10 @@ export default function InvoicePDF({ data }: { data: InvoiceData }) {
   const logoUrl = data.companyLogo || defaultLogo;
 
   const formatCurrency = (amount: number) => {
-    return '$' + amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return 'US$ ' + amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
+
+  const cName = data.companyName || "Footprints Energy";
 
   return (
     <Document>
@@ -194,105 +259,155 @@ export default function InvoicePDF({ data }: { data: InvoiceData }) {
           <Image src={logoUrl} style={styles.watermarkImage} />
         </View>
 
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.logoContainer}>
+        {/* Top Header */}
+        <View style={styles.topRow}>
+          <View style={{ flexDirection: 'column', alignItems: 'center', width: 120 }}>
             <Image src={logoUrl} style={styles.logoImage} />
-            <View style={styles.logoTextContainer}>
-              <View>
-                <Text style={styles.logoTitle}>{data.companyName ? data.companyName.split(' ')[0] : 'Footprints'} <Text style={styles.logoHighlight}>{data.companyName ? data.companyName.split(' ').slice(1).join(' ') : 'Energy'}</Text></Text>
-              </View>
-              <View style={{ marginTop: 4 }}>
-                <Text style={{ fontSize: 9, color: '#DAA35D', letterSpacing: 1 }}>GLOBAL COMMODITIES TRADE</Text>
-              </View>
+            <Text style={{ fontFamily: 'Helvetica-Bold', fontSize: 10, color: '#1D1D1D', marginTop: 2, textAlign: 'center' }}>
+              {cName.toUpperCase()}
+            </Text>
+            <Text style={{ fontSize: 5.5, color: '#DAA35D', marginTop: 1.5, letterSpacing: 0.5, textAlign: 'center' }}>
+              GLOBAL COMMODITIES TRADE
+            </Text>
+          </View>
+          {/* We assume CNPJ or Registration might be in notes or contact, if not we leave a placeholder or empty */}
+          <Text style={styles.cnpjText}></Text>
+        </View>
+
+        <View style={styles.titleCenter}>
+          <Text style={styles.proformaTitle}>PROFORMA INVOICE</Text>
+        </View>
+
+        <View style={styles.invoiceNoBoxContainer}>
+          <Text style={styles.invoiceNoBox}>Nº: {data.invoiceNo}</Text>
+        </View>
+
+        {/* Meta Data Row */}
+        <View style={styles.metaContainer}>
+          <View style={styles.metaCol1}>
+            <View style={styles.metaRowText}>
+              <Text style={styles.metaLabel}>DATA:</Text>
+              <Text style={styles.metaValue}>{data.date.toUpperCase()}</Text>
+            </View>
+            <View style={styles.metaRowText}>
+              <Text style={styles.metaLabel}>INVOICE NUMBER:</Text>
+              <Text style={styles.metaValue}>{data.invoiceNo}</Text>
             </View>
           </View>
-          <View style={styles.companyDetails}>
-            {data.companyAddress ? data.companyAddress.split('\n').map((line, i) => (
-              <Text key={`addr-${i}`}>{line}</Text>
-            )) : (
-              <>
-                <Text>123 Trade Center Blvd</Text>
-                <Text>New York, NY 10001</Text>
-              </>
-            )}
-            {data.companyContact ? data.companyContact.split('\n').map((line, i) => (
-              <Text key={`cont-${i}`}>{line}</Text>
-            )) : (
-              <>
-                <Text>contact@footprintsenergy.com</Text>
-                <Text>+1 (555) 123-4567</Text>
-              </>
-            )}
+          
+          <View style={styles.metaCol2}>
+            <Text style={styles.yellowTag}>BUYER</Text>
+            <Text style={styles.metaAddressText}>
+              <Text style={{ fontFamily: 'Helvetica-Bold' }}>{data.clientName}</Text>{'\n'}
+              {data.clientAddress}
+            </Text>
+          </View>
+
+          <View style={styles.metaCol3}>
+            <Text style={styles.yellowTag}>SELLER ADDRESS</Text>
+            <Text style={styles.metaAddressText}>
+              <Text style={{ fontFamily: 'Helvetica-Bold' }}>{cName}</Text>{'\n'}
+              {data.companyAddress}{'\n'}
+              {data.companyContact ? `PHONE: ${data.companyContact.replace('\n', ' | ')}` : ''}
+            </Text>
           </View>
         </View>
 
-        <Text style={styles.documentTitle}>Quotation / Invoice</Text>
-
-        {/* Meta Data */}
-        <View style={styles.metaDataContainer}>
-          <View style={styles.clientSection}>
-            <Text style={styles.sectionTitle}>Billed To:</Text>
-            <Text style={styles.boldText}>{data.clientName || "Client Name"}</Text>
-            <Text>{data.clientAddress || "Client Address"}</Text>
+        {/* Green Conditions Table */}
+        <View style={styles.greenTableContainer}>
+          <View style={styles.greenTableHeaders}>
+            <Text style={{ ...styles.greenColHeader, width: '30%' }}>SELLER</Text>
+            <Text style={{ ...styles.greenColHeader, width: '25%' }}>BUYER</Text>
+            <Text style={{ ...styles.greenColHeader, width: '30%' }}>PAYMENT CONDITIONS</Text>
+            <Text style={{ ...styles.greenColHeader, width: '15%' }}>EXPIRATION DATE</Text>
           </View>
-          <View style={styles.metaSection}>
-            <Text style={styles.sectionTitle}>Invoice Details:</Text>
-            <Text>Invoice No: <Text style={styles.boldText}>{data.invoiceNo}</Text></Text>
-            <Text>Date: <Text style={styles.boldText}>{data.date}</Text></Text>
+          <View style={styles.greenTableBody}>
+            <View style={{ ...styles.greenCell, width: '30%', borderRight: 0 }}><Text>{cName}</Text></View>
+            <View style={{ ...styles.greenCell, width: '25%', borderRight: 0 }}><Text>{data.clientName}</Text></View>
+            <View style={{ ...styles.greenCell, width: '30%', borderRight: 0 }}>
+              <Text>IN ADVANCE, AGAINST PROFORMA INVOICE</Text>
+            </View>
+            <View style={{ ...styles.greenCell, width: '15%' }}>
+              <Text>30 DAYS</Text>
+            </View>
           </View>
         </View>
 
         {/* Items Table */}
-        <View style={styles.table}>
-          <View style={styles.tableHeaderRow}>
-            <Text style={styles.colDesc}>Description</Text>
-            <Text style={styles.colQty}>Quantity / Size</Text>
-            <Text style={styles.colPrice}>Unit Price</Text>
-            <Text style={styles.colTotal}>Total</Text>
+        <View style={styles.itemsTableContainer}>
+          <View style={styles.itemsTableHeaders}>
+            <Text style={{ ...styles.itemsColHeader, width: '50%', paddingLeft: 6 }}>DESCRIPTION</Text>
+            <Text style={{ ...styles.itemsColHeader, width: '25%', textAlign: 'center' }}>PRICE</Text>
+            <Text style={{ ...styles.itemsColHeader, width: '25%', textAlign: 'center' }}>TOTAL PRICE</Text>
           </View>
           
           {data.items.map((item, i) => {
             const lineTotal = item.unitPrice * (parseFloat(item.quantity) || 1);
             return (
-              <View key={i} style={styles.tableRow}>
-                <Text style={styles.colDesc}>{item.productName || "Custom Item"}</Text>
-                <Text style={styles.colQty}>{item.quantity}</Text>
-                <Text style={styles.colPrice}>{formatCurrency(item.unitPrice)}</Text>
-                <Text style={styles.colTotal}>{formatCurrency(lineTotal)}</Text>
+              <View key={i} style={styles.itemsRow}>
+                <View style={{ ...styles.itemsCell, width: '50%' }}>
+                  <Text>{item.quantity} {item.productName || "Custom Item"}</Text>
+                </View>
+                <View style={{ ...styles.itemsCell, width: '25%', alignItems: 'center' }}>
+                  <Text style={{ fontFamily: 'Helvetica-Bold' }}>{formatCurrency(item.unitPrice)}</Text>
+                </View>
+                <View style={{ ...styles.itemsCellLast, width: '25%', alignItems: 'center' }}>
+                  <Text style={{ fontFamily: 'Helvetica-Bold' }}>{formatCurrency(lineTotal)}</Text>
+                </View>
               </View>
             );
           })}
-        </View>
-
-        {/* Summary */}
-        <View style={styles.summaryBox}>
-          <View style={styles.summaryRow}>
-            <Text>Subtotal:</Text>
-            <Text>{formatCurrency(data.totalAmount)}</Text>
-          </View>
-          <View style={styles.summaryRow}>
-            <Text>Tax (0%):</Text>
-            <Text>$0.00</Text>
-          </View>
-          <View style={styles.summaryTotalRow}>
-            <Text>Grand Total:</Text>
-            <Text>{formatCurrency(data.totalAmount)}</Text>
+          
+          {/* Summary Row */}
+          <View style={styles.itemsTotalRow}>
+            <View style={{ ...styles.itemsCell, width: '75%', alignItems: 'center', borderBottom: 0 }}>
+              <Text>TOTAL AMOUNT</Text>
+            </View>
+            <View style={{ ...styles.itemsCellLast, width: '25%', alignItems: 'center' }}>
+              <Text style={{ fontFamily: 'Helvetica-Bold', fontSize: 10 }}>{formatCurrency(data.totalAmount)}</Text>
+            </View>
           </View>
         </View>
 
-        {/* Notes */}
-        {data.notes && (
-          <View style={styles.notesSection}>
-            <Text style={styles.sectionTitle}>Terms & Conditions / Quotation Text</Text>
-            <Text style={{ fontSize: 9, marginTop: 5 }}>{data.notes}</Text>
+        {/* Bank Details */}
+        {data.bankDetails && (
+          <View wrap={false}>
+            <Text style={styles.bankTitle}>BANK DETAILS</Text>
+            <View style={styles.bankBox}>
+              {data.bankDetails.split('\n').map((line, i) => (
+                <Text key={`bank-${i}`} style={styles.bankLine}>{line}</Text>
+              ))}
+            </View>
           </View>
         )}
 
+        {/* Notes (If any) */}
+        {data.notes && (
+          <View wrap={false} style={{ marginTop: 15 }}>
+            <Text style={{ ...styles.bankTitle, backgroundColor: '#E5E7EB', borderColor: '#E5E7EB' }}>NOTES / TERMS</Text>
+            <View style={{ ...styles.bankBox, padding: 8 }}>
+              {data.notes.split('\n').map((line, i) => (
+                <Text key={`note-${i}`} style={styles.bankLine}>{line}</Text>
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* Signature */}
+        <View wrap={false} style={styles.signatureContainer}>
+          <Image src={`${data.origin}/images/signaturee.png`} style={{ width: 140, height: 70, objectFit: 'contain' }} />
+          <Text style={{ fontFamily: 'Helvetica-Bold', fontSize: 11, marginTop: 5 }}>Moyosore Atobatele</Text>
+          <Text style={{ fontSize: 9, color: '#4A4A4A', marginTop: 2 }}>Executive Director</Text>
+        </View>
+
         {/* Footer */}
-        <Text style={styles.footer}>
-          This is a computer-generated document. No signature is required. Thank you for doing business with Footprints Energy.
-        </Text>
+        <View style={styles.footerContainer} fixed>
+          <Text style={styles.footerCompany}>{cName}</Text>
+          <Text style={styles.footerDetails}>
+            {data.companyAddress ? data.companyAddress.replace('\n', ' - ') : ''} 
+            {data.companyContact ? ` - ${data.companyContact.replace('\n', ' - ')}` : ''}
+          </Text>
+        </View>
       </Page>
     </Document>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Phone, MapPin, Globe, Share2, Clock } from "lucide-react";
@@ -44,11 +46,23 @@ export default function Footer({ settings = DEFAULT_LANDING_SETTINGS }: { settin
               Footprints Energy is a leading commodity trader , specializing in agricultural produce, animal protein and energy derivatives. We supply commodities such as Sugar (IC45, VHP) , Animal Protein (Chicken, Bovine and Swine) and Grains (Soy, Corn and Coffee). We also facilitate trade of petroleum derivates such as Jet A4, AGO and PMS.
             </p>
             <div className="flex space-x-4">
-              {[Globe, Mail, Share2].map((Icon, idx) => (
-                <Link key={idx} href="#" className="bg-white p-3 rounded-full text-[#1D1D1D] hover:bg-[#FD630A] hover:text-white transition-all shadow-sm">
-                  <Icon size={20} />
+              {settings.contact_phone_secondary && (
+                <Link href={settings.contact_phone_secondary} target="_blank" className="bg-white p-3 rounded-full text-[#1D1D1D] hover:bg-[#FD630A] hover:text-white transition-all shadow-sm">
+                  <Globe size={20} />
                 </Link>
-              ))}
+              )}
+              {settings.contact_email_secondary && (
+                <Link href={`mailto:${settings.contact_email_secondary}`} className="bg-white p-3 rounded-full text-[#1D1D1D] hover:bg-[#FD630A] hover:text-white transition-all shadow-sm">
+                  <Mail size={20} />
+                </Link>
+              )}
+              <button onClick={() => {
+                if (typeof window !== 'undefined' && navigator.share) {
+                  navigator.share({ title: 'Footprints Energy', url: window.location.href });
+                }
+              }} className="bg-white p-3 rounded-full text-[#1D1D1D] hover:bg-[#FD630A] hover:text-white transition-all shadow-sm">
+                <Share2 size={20} />
+              </button>
             </div>
           </div>
 

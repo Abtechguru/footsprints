@@ -13,13 +13,13 @@ export default function Navbar({ settings = DEFAULT_LANDING_SETTINGS }: { settin
       {/* Top Utility Contact Bar */}
       <div className="bg-[#1D1D1D] text-white py-2.5 px-6 sm:px-12 flex justify-between items-center text-xs font-semibold">
         <div className="flex items-center space-x-6">
-          <a href={`tel:${settings.contact_phone_secondary}`} className="flex items-center gap-2 hover:text-[#FD630A] transition-colors">
+          <a href={`tel:${settings.contact_phone_primary}`} className="flex items-center gap-2 hover:text-[#FD630A] transition-colors">
             <Phone size={14} />
-            <span>{settings.contact_phone_secondary}</span>
+            <span>{settings.contact_phone_primary}</span>
           </a>
-          <a href={`mailto:${settings.contact_email_secondary}`} className="flex items-center gap-2 hover:text-[#FD630A] transition-colors">
+          <a href={`mailto:${settings.contact_email_primary}`} className="flex items-center gap-2 hover:text-[#FD630A] transition-colors">
             <Mail size={14} />
-            <span>{settings.contact_email_secondary}</span>
+            <span>{settings.contact_email_primary}</span>
           </a>
         </div>
       </div>

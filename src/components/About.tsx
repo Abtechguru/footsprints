@@ -85,7 +85,7 @@ export default function About({ settings }: { settings: LandingSettings }) {
           {/* Right: Typography */}
           <div className="space-y-8 order-1 lg:order-2">
             <h2 className="text-4xl lg:text-5xl font-semibold text-[#1D1D1D] tracking-tight leading-[1.1] uppercase">
-              Who We Are
+              {settings.about_title || "Who We Are"}
             </h2>
             
             <div className="space-y-6 text-base text-[#1D1D1D]/70 leading-relaxed font-medium">

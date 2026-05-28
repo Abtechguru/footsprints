@@ -74,10 +74,10 @@ export const DEFAULT_LANDING_SETTINGS: LandingSettings = {
     { id: "02", title: "FCO (Full Corporate Offer)", desc: "Our Full Corporate Offer will be tailored specifically to your request and will remain valid for a limited period, reflecting global market prices." },
     { id: "03", title: "SPA & Delivery", desc: "To finalize, a Sales and Purchase Agreement (SPA) must be executed. Footprints Energy operates under Incoterms and is based in the USA." }
   ],
-  contact_phone_primary: "+1 (555) 000-0000",
-  contact_phone_secondary: "+234 810 568 2872",
-  contact_email_primary: "trade@footprintsenergy.com",
-  contact_email_secondary: "info@footprintsenergy.com",
-  contact_address_line1: "USA | Head Office",
-  contact_address_line2: "Mainland Business Park, Tower 2"
+  contact_phone_primary: "+1 3464348264",
+  contact_phone_secondary: "https://footprints-energy.com",
+  contact_email_primary: "info@footprintenergy.com",
+  contact_email_secondary: "info@footprintenergy.com",
+  contact_address_line1: "5848 A1 Westheimer Rd, Houston, Texas",
+  contact_address_line2: "77057"
 };

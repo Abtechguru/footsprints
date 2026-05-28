@@ -50,6 +50,7 @@ export default function ReceiptClient({ products, initialReceipts, isMasterAdmin
   const [companyContact, setCompanyContact] = useState("contact@footprintsenergy.com\n+1 (555) 123-4567");
   const [companyAddress, setCompanyAddress] = useState("123 Trade Center Blvd\nNew York, NY 10001");
   const [companyLogo, setCompanyLogo] = useState("");
+  const [bankDetails, setBankDetails] = useState("Acct Name : Footprints Energy Inc\nBank: Bank of America\nAcct No: 4881 3467 4843\nRouting: 111000025\nWire: 026009593\nSwift : BOFAUS3N");
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -163,6 +164,7 @@ export default function ReceiptClient({ products, initialReceipts, isMasterAdmin
   // Compile Receipt Data
   const getReceiptData = () => {
     return {
+      origin: typeof window !== 'undefined' ? window.location.origin : '',
       buyerEmail,
       buyerName,
       receiptNo,
@@ -191,6 +193,7 @@ export default function ReceiptClient({ products, initialReceipts, isMasterAdmin
       companyContact,
       companyAddress,
       companyLogo,
+      bankDetails,
     };
   };
 
@@ -303,6 +306,7 @@ export default function ReceiptClient({ products, initialReceipts, isMasterAdmin
                 setBuyerName("John Doe");
                 setBuyerEmail("buyer@example.com");
                 setReceiptDate(new Date().toLocaleDateString("en-US"));
+                setBankDetails("Acct Name : Footprints Energy Inc\nBank: Bank of America\nAcct No: 4881 3467 4843\nRouting: 111000025\nWire: 026009593\nSwift : BOFAUS3N");
               }}
               className="text-xs font-bold text-[#FD630A] border border-[#FD630A]/20 hover:bg-[#FD630A]/5 px-3 py-1.5 rounded-lg"
             >
@@ -360,6 +364,11 @@ export default function ReceiptClient({ products, initialReceipts, isMasterAdmin
             <div className="flex flex-col space-y-2 mt-4">
               <label className="text-sm font-bold text-[#1D1D1D]/70">Company Address</label>
               <textarea value={companyAddress} onChange={(e) => setCompanyAddress(e.target.value)} rows={2} className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#FD630A] text-xs resize-none" />
+            </div>
+
+            <div className="flex flex-col space-y-2 mt-4">
+              <label className="text-sm font-bold text-[#1D1D1D]/70">Bank Account Details</label>
+              <textarea value={bankDetails} onChange={(e) => setBankDetails(e.target.value)} rows={6} className="border border-[#1D1D1D]/10 rounded-lg px-4 py-2 focus:outline-none focus:border-[#FD630A] text-xs resize-none" />
             </div>
           </div>
 
@@ -665,6 +674,23 @@ export default function ReceiptClient({ products, initialReceipts, isMasterAdmin
                     ))}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Bank Details */}
+              {bankDetails && (
+                <div className="space-y-3 mt-8 bg-[#F0F4F8] p-4 rounded-lg border border-[#1D1D1D]/5">
+                  <h3 className="text-[10px] font-bold text-[#1D1D1D] uppercase tracking-wider mb-1.5">Payment / Bank Details:</h3>
+                  <p className="text-[11px] text-[#1D1D1D]/80 font-medium leading-relaxed whitespace-pre-line">
+                    {bankDetails}
+                  </p>
+                </div>
+              )}
+
+              {/* Signature */}
+              <div className="mt-12 text-right pr-4">
+                <img src="/images/signaturee.png" alt="Signature" className="h-16 object-contain inline-block" />
+                <h4 className="text-sm font-bold text-[#1D1D1D] mt-2 mb-0.5">Moyosore Atobatele</h4>
+                <p className="text-[11px] text-[#1D1D1D]/60 font-medium m-0">Executive Director</p>
               </div>
 
               {/* Notes */}
