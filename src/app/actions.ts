@@ -576,6 +576,8 @@ export async function updateLandingSettings(formData: FormData) {
   const contact_email_secondary = formData.get("contact_email_secondary") as string;
   const contact_address_line1 = formData.get("contact_address_line1") as string;
   const contact_address_line2 = formData.get("contact_address_line2") as string;
+  const document_letterhead_url = formData.get("document_letterhead_url") as string;
+  const document_signature_url = formData.get("document_signature_url") as string;
 
   // Handle lists
   const valuePropsJson = formData.get("value_props_list_json") as string;
@@ -669,6 +671,8 @@ export async function updateLandingSettings(formData: FormData) {
     contact_email_secondary,
     contact_address_line1,
     contact_address_line2,
+    document_letterhead_url,
+    document_signature_url,
   };
 
   const { error } = await supabaseAdmin

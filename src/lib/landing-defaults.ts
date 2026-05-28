@@ -33,6 +33,8 @@ export interface LandingSettings {
   contact_email_secondary: string;
   contact_address_line1: string;
   contact_address_line2: string;
+  document_letterhead_url?: string;
+  document_signature_url?: string;
 }
 
 export const DEFAULT_LANDING_SETTINGS: LandingSettings = {
@@ -79,5 +81,7 @@ export const DEFAULT_LANDING_SETTINGS: LandingSettings = {
   contact_email_primary: "info@footprintenergy.com",
   contact_email_secondary: "info@footprintenergy.com",
   contact_address_line1: "5848 A1 Westheimer Rd, Houston, Texas",
-  contact_address_line2: "77057"
+  contact_address_line2: "77057",
+  document_letterhead_url: "",
+  document_signature_url: ""
 };

@@ -119,11 +119,16 @@ export interface LetterData {
   companyName?: string;
   companyAddress?: string;
   companyContact?: string;
+  letterheadUrl?: string | null;
+  signatureUrl?: string | null;
 }
 
 export default function LetterPDF({ data }: { data: LetterData }) {
   const defaultLogo = `${data.origin}/images/footsprintLogo.jpeg`;
-  const signatureImg = `${data.origin}/signaturee.png`;
+  const defaultSignature = `${data.origin}/images/signaturee.png`;
+  
+  const logoUrl = data.letterheadUrl || defaultLogo;
+  const signatureImg = data.signatureUrl || defaultSignature;
   
   const cName = data.companyName || "Footprints Energy";
   
@@ -136,12 +141,12 @@ export default function LetterPDF({ data }: { data: LetterData }) {
         
         {/* Watermark */}
         <View style={styles.watermarkContainer}>
-          <Image src={defaultLogo} style={styles.watermarkImage} />
+          <Image src={logoUrl} style={styles.watermarkImage} />
         </View>
 
         {/* Header */}
         <View style={styles.header}>
-          <Image src={defaultLogo} style={styles.logoImage} />
+          <Image src={logoUrl} style={styles.logoImage} />
           <Text style={styles.companyName}>{cName.toUpperCase()}</Text>
           <Text style={styles.slogan}>GLOBAL COMMODITIES TRADE</Text>
         </View>

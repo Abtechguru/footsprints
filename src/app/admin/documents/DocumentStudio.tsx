@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { UploadCloud, FileText } from "lucide-react";
-import { uploadEncryptedVaultDocument } from "@/app/actions";
+import { uploadEncryptedVaultDocument, uploadDocumentAsset, updateDocumentAssets } from "@/app/actions";
 import { LandingSettings } from "@/lib/landing-defaults";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import LetterPDF, { LetterData } from "@/components/LetterPDF";
@@ -19,6 +19,14 @@ export default function DocumentStudio({ settings }: { settings?: LandingSetting
   const [pdfReady, setPdfReady] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [pdfData, setPdfData] = useState<LetterData | null>(null);
+
+  // Assets State
+  const [letterheadUrl, setLetterheadUrl] = useState<string | null>(settings?.document_letterhead_url || null);
+  const [signatureUrl, setSignatureUrl] = useState<string | null>(settings?.document_signature_url || null);
+  const [isUploadingAsset, setIsUploadingAsset] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadType, setUploadType] = useState<"letterhead" | "signature">("letterhead");
 
   // Vault state
   const [isUploadingVault, setIsUploadingVault] = useState(false);
@@ -46,6 +54,36 @@ export default function DocumentStudio({ settings }: { settings?: LandingSetting
     }
   };
 
+  const triggerUpload = (type: "letterhead" | "signature") => {
+    setUploadType(type);
+    fileInputRef.current?.click();
+  };
+
+  const handleAssetUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setIsUploadingAsset(true);
+      const formData = new FormData();
+      formData.append("file", file as File);
+      formData.append("type", uploadType);
+      
+      const res = await uploadDocumentAsset(formData);
+      if (res.success && res.url) {
+        if (uploadType === "letterhead") {
+          setLetterheadUrl(res.url);
+          await updateDocumentAssets(res.url, null);
+        } else {
+          setSignatureUrl(res.url);
+          await updateDocumentAssets(null, res.url);
+        }
+      } else {
+        alert("Upload failed: " + res.error);
+      }
+      setIsUploadingAsset(false);
+      setPdfReady(false); // reset PDF to regenerate with new asset
+    }
+  };
+
   const handleCompile = () => {
     if (!recipient.trim() || !body.trim()) {
       alert("Recipient Address and Letter Body are required!");
@@ -60,7 +98,9 @@ export default function DocumentStudio({ settings }: { settings?: LandingSetting
       origin: window.location.origin,
       companyName: settings?.hero_title || "Footprints Energy",
       companyAddress: settings ? `${settings.contact_address_line1}, ${settings.contact_address_line2}` : "123 Business Avenue, Corporate District",
-      companyContact: `${settings?.contact_email_primary || ''} | ${settings?.contact_phone_primary || ''}`
+      companyContact: `${settings?.contact_email_primary || ''} | ${settings?.contact_phone_primary || ''}`,
+      letterheadUrl,
+      signatureUrl
     });
     setPdfReady(true);
   };
@@ -174,6 +214,47 @@ export default function DocumentStudio({ settings }: { settings?: LandingSetting
 
             {/* Controls Section */}
             <div className="md:col-span-1 space-y-6">
+              
+              <div className="bg-white rounded-lg shadow-sm border border-[#1D1D1D]/10 p-6 space-y-4">
+                <h3 className="text-sm font-bold text-[#1D1D1D] uppercase tracking-widest border-b border-[#1D1D1D]/10 pb-2">Branding Assets</h3>
+                
+                <div className="space-y-4">
+                  <div className="flex flex-col">
+                    <label className="text-xs font-bold text-[#1D1D1D]/70 mb-2">Letterhead / Logo</label>
+                    <div className="flex items-center space-x-2">
+                      <button 
+                        onClick={() => triggerUpload("letterhead")}
+                        disabled={isUploadingAsset}
+                        className="flex-1 bg-[#FBFBFA] border border-[#1D1D1D]/20 hover:border-[#FD630A] text-xs font-semibold py-2 rounded transition-colors"
+                      >
+                        {isUploadingAsset && uploadType === "letterhead" ? "Uploading..." : letterheadUrl ? "Update Letterhead" : "Upload Letterhead"}
+                      </button>
+                      {letterheadUrl && (
+                        <button onClick={async () => { setLetterheadUrl(null); await updateDocumentAssets("", null); setPdfReady(false); }} className="text-xs text-red-500 hover:underline px-2">Clear</button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label className="text-xs font-bold text-[#1D1D1D]/70 mb-2">Executive Signature</label>
+                    <div className="flex items-center space-x-2">
+                      <button 
+                        onClick={() => triggerUpload("signature")}
+                        disabled={isUploadingAsset}
+                        className="flex-1 bg-[#FBFBFA] border border-[#1D1D1D]/20 hover:border-[#FD630A] text-xs font-semibold py-2 rounded transition-colors"
+                      >
+                        {isUploadingAsset && uploadType === "signature" ? "Uploading..." : signatureUrl ? "Update Signature" : "Upload Signature"}
+                      </button>
+                      {signatureUrl && (
+                        <button onClick={async () => { setSignatureUrl(null); await updateDocumentAssets(null, ""); setPdfReady(false); }} className="text-xs text-red-500 hover:underline px-2">Clear</button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleAssetUpload} />
+                </div>
+              </div>
+
               <div className="bg-[#1D1D1D] p-6 rounded-xl shadow-xl text-white space-y-6 sticky top-8">
                 <h2 className="text-xl font-bold">Document Controls</h2>
                 <p className="text-white/70 leading-relaxed text-sm">
