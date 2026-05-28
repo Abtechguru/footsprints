@@ -690,6 +690,26 @@ export async function updateLandingSettings(formData: FormData) {
   return { success: true };
 }
 
+export async function updateDocumentAssets(letterheadUrl: string | null, signatureUrl: string | null) {
+  const updatePayload: any = {};
+  if (letterheadUrl !== null) updatePayload.document_letterhead_url = letterheadUrl;
+  if (signatureUrl !== null) updatePayload.document_signature_url = signatureUrl;
+
+  const { error } = await supabaseAdmin
+    .from("landing_page_settings")
+    .update(updatePayload)
+    .eq("id", 1);
+
+  if (error) {
+    console.error("Error updating document assets:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/documents");
+  return { success: true };
+}
+
 export async function addMediaSession(formData: FormData) {
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
