@@ -29,6 +29,9 @@ export async function GET(request: Request) {
     .order("created_at", { ascending: false });
 
   if (error) {
+    if (error.code === 'PGRST205') {
+      return NextResponse.json([]);
+    }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

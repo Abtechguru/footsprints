@@ -29,6 +29,10 @@ export async function GET(request: Request) {
     .order("created_at", { ascending: true });
 
   if (error) {
+    if (error.code === 'PGRST205') {
+      // Table doesn't exist yet, return empty array gracefully
+      return NextResponse.json([]);
+    }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
