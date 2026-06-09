@@ -49,7 +49,6 @@ export default function Navbar({ settings = DEFAULT_LANDING_SETTINGS }: { settin
                 fill
                 sizes="(max-width: 640px) 80px, 96px"
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                priority
               />
             </div>
           </div>

@@ -94,6 +94,7 @@ export async function addTeamMember(formData: FormData) {
   }
 
   revalidatePath("/");
+  revalidatePath("/our-team");
   revalidatePath("/admin/team");
 }
 
@@ -138,6 +139,7 @@ export async function updateTeamMember(formData: FormData) {
   }
 
   revalidatePath("/");
+  revalidatePath("/our-team");
   revalidatePath("/admin/team");
   return { success: true };
 }
@@ -151,6 +153,7 @@ export async function deleteTeamMember(id: string) {
   }
 
   revalidatePath("/");
+  revalidatePath("/our-team");
   revalidatePath("/admin/team");
 }
 

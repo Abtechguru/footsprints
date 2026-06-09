@@ -47,8 +47,12 @@ export default function Footer({ settings = DEFAULT_LANDING_SETTINGS }: { settin
             </p>
             <div className="flex space-x-4">
               {settings.contact_phone_secondary && (
-                <Link href={settings.contact_phone_secondary} target="_blank" className="bg-white p-3 rounded-full text-[#1D1D1D] hover:bg-[#FD630A] hover:text-white transition-all shadow-sm">
-                  <Globe size={20} />
+                <Link 
+                  href={settings.contact_phone_secondary.match(/^[\d\+\s\-\(\)]+$/) ? `tel:${settings.contact_phone_secondary}` : (settings.contact_phone_secondary.startsWith('http') ? settings.contact_phone_secondary : `https://${settings.contact_phone_secondary}`)} 
+                  target={settings.contact_phone_secondary.match(/^[\d\+\s\-\(\)]+$/) ? "_self" : "_blank"} 
+                  className="bg-white p-3 rounded-full text-[#1D1D1D] hover:bg-[#FD630A] hover:text-white transition-all shadow-sm"
+                >
+                  {settings.contact_phone_secondary.match(/^[\d\+\s\-\(\)]+$/) ? <Phone size={20} /> : <Globe size={20} />}
                 </Link>
               )}
               {settings.contact_email_secondary && (
