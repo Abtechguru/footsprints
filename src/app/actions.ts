@@ -63,7 +63,7 @@ export async function addTeamMember(formData: FormData) {
   const email = formData.get("email") as string;
   const imageFile = formData.get("imageFile") as File;
 
-  if (!name || !role || !imageFile) return;
+  if (!name || !role || !imageFile) return { success: false, error: "Missing required fields" };
 
   // Upload image to Supabase Storage
   let imageUrl = "";
@@ -77,7 +77,7 @@ export async function addTeamMember(formData: FormData) {
       
     if (uploadError) {
       console.error(uploadError);
-      return;
+      return { success: false, error: "Image upload failed: " + uploadError.message };
     }
     
     const { data } = supabaseAdmin.storage.from('images').getPublicUrl(fileName);
@@ -85,17 +85,18 @@ export async function addTeamMember(formData: FormData) {
   }
 
   const { error } = await supabaseAdmin.from("team_members").insert([
-    { name, role, email, image: imageUrl }
+    { name, role, email: email || null, image: imageUrl }
   ]);
 
   if (error) {
     console.error(error);
-    return;
+    return { success: false, error: error.message };
   }
 
   revalidatePath("/");
   revalidatePath("/our-team");
   revalidatePath("/admin/team");
+  return { success: true };
 }
 
 export async function updateTeamMember(formData: FormData) {
@@ -130,7 +131,7 @@ export async function updateTeamMember(formData: FormData) {
 
   const { error } = await supabaseAdmin
     .from("team_members")
-    .update({ name, role, email, image: imageUrl })
+    .update({ name, role, email: email || null, image: imageUrl })
     .eq("id", id);
 
   if (error) {

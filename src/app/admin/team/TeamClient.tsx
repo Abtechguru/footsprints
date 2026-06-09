@@ -99,19 +99,24 @@ export default function TeamClient({ initialTeam }: { initialTeam: TeamMember[] 
       // or we can invoke it via Server Action programmatically here:
       const addForm = e.currentTarget;
       const data = new FormData(addForm);
-      await addTeamMember(data);
+      const res = await addTeamMember(data);
       
-      setStatus("success");
-      setMessage("Team member successfully added!");
-      setName("");
-      setRole("");
-      setEmail("");
-      setImageFile(null);
-      
-      // Reload window after 1 second to fetch latest public URL from Supabase
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      if (res?.success) {
+        setStatus("success");
+        setMessage("Team member successfully added!");
+        setName("");
+        setRole("");
+        setEmail("");
+        setImageFile(null);
+        
+        // Reload window after 1 second to fetch latest public URL from Supabase
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        setStatus("error");
+        setMessage(res?.error || "Failed to add team member.");
+      }
     }
   };
 
