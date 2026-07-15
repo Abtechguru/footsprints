@@ -32,6 +32,7 @@ export default function DocumentStudio({ settings }: { settings?: LandingSetting
   const [isUploadingVault, setIsUploadingVault] = useState(false);
   const [vaultFiles, setVaultFiles] = useState<{name: string, date: string}[]>([]);
   const vaultInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -131,12 +132,33 @@ export default function DocumentStudio({ settings }: { settings?: LandingSetting
             <p className="text-sm text-[#1D1D1D]/60 mb-8">Upload sensitive business documents. They are encrypted client-side using military-grade AES-256 before being stored in the cloud.</p>
             
             <div 
-              className={`border-2 border-dashed border-[#1D1D1D]/20 rounded-lg p-10 flex flex-col items-center justify-center cursor-pointer transition-all ${isUploadingVault ? "opacity-50" : "hover:border-[#FD630A] hover:bg-[#FD630A]/5"}`}
+              className={`relative border-2 border-dashed rounded-xl p-12 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 overflow-hidden ${
+                isUploadingVault 
+                  ? "border-[#1D1D1D]/10 bg-[#F7F7F7] opacity-60" 
+                  : isDragging
+                    ? "border-[#FD630A] bg-[#FD630A]/5 scale-[1.02]"
+                    : "border-[#1D1D1D]/20 hover:border-[#FD630A] hover:bg-white hover:shadow-lg"
+              }`}
+              onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDragging(false);
+                if (!isUploadingVault && e.dataTransfer.files?.[0]) {
+                  const fakeEvent = { target: { files: e.dataTransfer.files } } as any;
+                  handleVaultUpload(fakeEvent);
+                }
+              }}
               onClick={() => !isUploadingVault && vaultInputRef.current?.click()}
             >
-              <UploadCloud size={48} className="text-[#1D1D1D]/30 mb-4" />
-              <p className="text-sm font-bold text-[#1D1D1D] mb-1">{isUploadingVault ? "Encrypting..." : "Click to select a secure file"}</p>
-              <p className="text-xs text-[#1D1D1D]/50">PDF, DOCX, XLSX, etc.</p>
+              <div className={`absolute inset-0 bg-gradient-to-br from-[#FD630A]/10 to-transparent transition-opacity duration-500 ${isDragging ? 'opacity-100' : 'opacity-0'}`}></div>
+              <div className={`relative z-10 p-4 rounded-full mb-4 transition-all duration-300 ${isDragging ? 'bg-[#FD630A] text-white scale-110 shadow-lg shadow-[#FD630A]/30' : 'bg-[#F7F3E6] text-[#1D1D1D]/40 group-hover:text-[#FD630A]'}`}>
+                <UploadCloud size={40} className={isUploadingVault ? 'animate-bounce' : ''} />
+              </div>
+              <p className="relative z-10 text-base font-bold text-[#1D1D1D] mb-2">
+                {isUploadingVault ? "Encrypting Document..." : isDragging ? "Drop to secure file" : "Drag & drop or click to upload"}
+              </p>
+              <p className="relative z-10 text-xs text-[#1D1D1D]/50 font-medium bg-white px-3 py-1 rounded-full border border-[#1D1D1D]/10 shadow-sm">PDF, DOCX, XLSX up to 50MB</p>
               <input type="file" ref={vaultInputRef} className="hidden" onChange={handleVaultUpload} />
             </div>
 
@@ -219,34 +241,42 @@ export default function DocumentStudio({ settings }: { settings?: LandingSetting
                 <h3 className="text-sm font-bold text-[#1D1D1D] uppercase tracking-widest border-b border-[#1D1D1D]/10 pb-2">Branding Assets</h3>
                 
                 <div className="space-y-4">
-                  <div className="flex flex-col">
-                    <label className="text-xs font-bold text-[#1D1D1D]/70 mb-2">Letterhead / Logo</label>
-                    <div className="flex items-center space-x-2">
-                      <button 
+                  <div className="flex flex-col space-y-2">
+                    <label className="text-xs font-bold text-[#1D1D1D]/70">Letterhead / Logo</label>
+                    <div className="flex items-center gap-3">
+                      <div 
                         onClick={() => triggerUpload("letterhead")}
-                        disabled={isUploadingAsset}
-                        className="flex-1 bg-[#FBFBFA] border border-[#1D1D1D]/20 hover:border-[#FD630A] text-xs font-semibold py-2 rounded transition-colors"
+                        className={`flex-1 flex items-center justify-center gap-2 border-2 border-dashed rounded-lg py-3 cursor-pointer transition-all ${
+                          isUploadingAsset && uploadType === "letterhead" ? "border-[#1D1D1D]/10 bg-gray-50 opacity-70" : "border-[#1D1D1D]/20 hover:border-[#FD630A] hover:bg-[#FD630A]/5"
+                        }`}
                       >
-                        {isUploadingAsset && uploadType === "letterhead" ? "Uploading..." : letterheadUrl ? "Update Letterhead" : "Upload Letterhead"}
-                      </button>
+                        <UploadCloud size={16} className={letterheadUrl ? "text-green-500" : "text-[#1D1D1D]/40"} />
+                        <span className="text-xs font-bold text-[#1D1D1D]">
+                          {isUploadingAsset && uploadType === "letterhead" ? "Uploading..." : letterheadUrl ? "Letterhead Added. Update?" : "Upload Logo/Header"}
+                        </span>
+                      </div>
                       {letterheadUrl && (
-                        <button onClick={async () => { setLetterheadUrl(null); await updateDocumentAssets("", null); setPdfReady(false); }} className="text-xs text-red-500 hover:underline px-2">Clear</button>
+                        <button onClick={async () => { setLetterheadUrl(null); await updateDocumentAssets("", null); setPdfReady(false); }} className="text-[10px] uppercase font-bold text-red-500 hover:text-red-600 px-2 transition-colors tracking-widest">Clear</button>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex flex-col">
-                    <label className="text-xs font-bold text-[#1D1D1D]/70 mb-2">Executive Signature</label>
-                    <div className="flex items-center space-x-2">
-                      <button 
+                  <div className="flex flex-col space-y-2">
+                    <label className="text-xs font-bold text-[#1D1D1D]/70">Executive Signature</label>
+                    <div className="flex items-center gap-3">
+                      <div 
                         onClick={() => triggerUpload("signature")}
-                        disabled={isUploadingAsset}
-                        className="flex-1 bg-[#FBFBFA] border border-[#1D1D1D]/20 hover:border-[#FD630A] text-xs font-semibold py-2 rounded transition-colors"
+                        className={`flex-1 flex items-center justify-center gap-2 border-2 border-dashed rounded-lg py-3 cursor-pointer transition-all ${
+                          isUploadingAsset && uploadType === "signature" ? "border-[#1D1D1D]/10 bg-gray-50 opacity-70" : "border-[#1D1D1D]/20 hover:border-[#FD630A] hover:bg-[#FD630A]/5"
+                        }`}
                       >
-                        {isUploadingAsset && uploadType === "signature" ? "Uploading..." : signatureUrl ? "Update Signature" : "Upload Signature"}
-                      </button>
+                        <UploadCloud size={16} className={signatureUrl ? "text-green-500" : "text-[#1D1D1D]/40"} />
+                        <span className="text-xs font-bold text-[#1D1D1D]">
+                          {isUploadingAsset && uploadType === "signature" ? "Uploading..." : signatureUrl ? "Signature Added. Update?" : "Upload Signature"}
+                        </span>
+                      </div>
                       {signatureUrl && (
-                        <button onClick={async () => { setSignatureUrl(null); await updateDocumentAssets(null, ""); setPdfReady(false); }} className="text-xs text-red-500 hover:underline px-2">Clear</button>
+                        <button onClick={async () => { setSignatureUrl(null); await updateDocumentAssets(null, ""); setPdfReady(false); }} className="text-[10px] uppercase font-bold text-red-500 hover:text-red-600 px-2 transition-colors tracking-widest">Clear</button>
                       )}
                     </div>
                   </div>

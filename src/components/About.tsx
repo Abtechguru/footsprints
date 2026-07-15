@@ -43,7 +43,7 @@ export default function About({ settings }: { settings: LandingSettings }) {
         </svg>
       </div>
 
-      <div className="max-w-[90rem] mx-auto px-6 sm:px-12 relative z-10">
+      <div className="max-w-[90rem] mx-auto px-6 sm:px-12 relative z-10 animate-fade-in-up">
         
         {/* Simple Top Label */}
         <div className="flex items-center space-x-4 mb-12 lg:mb-20">
@@ -54,8 +54,11 @@ export default function About({ settings }: { settings: LandingSettings }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           
           {/* Left: Visual Asset */}
-          <div className="relative group order-2 lg:order-1">
-            <div className="relative aspect-square lg:aspect-auto lg:h-[550px] overflow-hidden rounded-sm bg-[#F7F3E6] border border-[#1D1D1D]/5">
+          <div className="relative group order-2 lg:order-1 flex justify-center">
+            <div className="absolute inset-0 bg-[#FD630A]/5 rounded-3xl blur-2xl transform group-hover:scale-105 transition-all duration-700"></div>
+            
+            <div className="relative aspect-[4/5] w-full max-w-md lg:max-w-full lg:h-[600px] overflow-hidden rounded-2xl bg-white border border-[#1D1D1D]/10 shadow-[0_20px_50px_rgba(0,0,0,0.1)] group-hover:shadow-[0_30px_60px_rgba(253,99,10,0.15)] transition-all duration-700 z-10">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1D1D1D]/40 to-transparent z-10 pointer-events-none"></div>
               {(settings.about_image || "").endsWith(".mp4") ? (
                 <video
                   src={settings.about_image}
@@ -63,7 +66,7 @@ export default function About({ settings }: { settings: LandingSettings }) {
                   loop
                   muted
                   playsInline
-                  className="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-1000"
+                  className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000"
                 />
               ) : (
                 <Image 
@@ -71,14 +74,18 @@ export default function About({ settings }: { settings: LandingSettings }) {
                   alt="Global Commodity Trade" 
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+                  className="object-cover transform group-hover:scale-105 transition-transform duration-1000"
                 />
               )}
             </div>
-            {/* Minimalist Floating Accent */}
-            <div className="absolute bottom-0 left-0 sm:-bottom-8 sm:-left-8 bg-[#FD630A] text-white p-6 sm:p-8 shadow-2xl">
-              <span className="block text-3xl font-bold tracking-tighter">{settings.about_accent_title}</span>
-              <span className="block text-[10px] font-bold uppercase tracking-[0.3em] opacity-80 mt-2">{settings.about_accent_subtitle}</span>
+            
+            {/* Premium Floating Accent */}
+            <div className="absolute bottom-6 left-6 sm:-bottom-6 sm:-left-6 backdrop-blur-xl bg-white/90 border border-white/50 text-[#1D1D1D] p-6 sm:p-8 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.1)] transform group-hover:-translate-y-2 transition-all duration-700 z-20 max-w-[280px]">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-2 h-2 rounded-full bg-[#FD630A] animate-pulse"></div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#FD630A]">{settings.about_accent_subtitle}</span>
+              </div>
+              <span className="block text-3xl sm:text-4xl font-black tracking-tight leading-none">{settings.about_accent_title}</span>
             </div>
           </div>
 

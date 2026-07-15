@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import NewsCard from "./NewsCard";
 import { supabase } from "@/lib/supabase";
 
 export default async function RecentNews() {
@@ -36,56 +37,7 @@ export default async function RecentNews() {
             const previewUrl = preview?.url || "/images/10-of-the-Healthiest-Vegetables-You-Can-Eat.jpeg";
 
             return (
-              <div 
-                key={session.id} 
-                className="bg-white border border-[#1D1D1D]/5 hover:border-[#FD630A]/20 hover:shadow-xl transition-all duration-500 flex flex-col group rounded-sm"
-              >
-                {/* Visual Preview */}
-                <div className="relative aspect-[21/9] overflow-hidden bg-[#F7F3E6] border-b border-[#1D1D1D]/5">
-                  {(previewUrl || "").endsWith(".mp4") ? (
-                    <video
-                      src={previewUrl}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
-                    />
-                  ) : (
-                    <Image 
-                      src={previewUrl} 
-                      alt={session.title} 
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  )}
-                  <div className="absolute top-4 left-4 bg-white/95 px-3 py-1 text-[9px] font-bold text-[#1D1D1D] uppercase tracking-wider rounded-sm shadow-sm">
-                    {new Date(session.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-3">
-                    <h4 className="text-xl font-bold text-[#1D1D1D] group-hover:text-[#FD630A] transition-colors leading-snug line-clamp-2 uppercase">
-                      {session.title}
-                    </h4>
-                    <p className="text-sm text-[#1D1D1D]/60 leading-relaxed line-clamp-3">
-                      {session.description}
-                    </p>
-                  </div>
-                  
-                  <div className="pt-2">
-                    <Link 
-                      href="/sessions" 
-                      className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#FD630A] hover:text-[#1D1D1D] transition-colors"
-                    >
-                      <span>Read More &rarr;</span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              <NewsCard key={session.id} session={session} previewUrl={previewUrl} />
             );
           })}
 
@@ -100,7 +52,7 @@ export default async function RecentNews() {
         <div className="flex justify-center pt-4">
           <Link 
             href="/sessions" 
-            className="bg-white border border-[#1D1D1D]/10 hover:border-[#FD630A] text-[#1D1D1D] hover:text-[#FD630A] text-xs font-bold uppercase tracking-widest px-8 py-3.5 transition-all rounded-sm shadow-sm"
+            className="bg-white border border-[#1D1D1D]/10 hover:border-[#FD630A] hover:bg-[#FD630A] text-[#1D1D1D] hover:text-white text-sm font-bold uppercase tracking-widest px-10 py-4 transition-all duration-300 rounded-2xl shadow-[0_10px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_30px_rgba(253,99,10,0.2)]"
           >
             View All Operations Log
           </Link>

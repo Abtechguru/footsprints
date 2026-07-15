@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import InvoicePDF from "@/components/InvoicePDF";
-import { Mail, Printer, Plus, Trash2, ShieldCheck, Save, FolderOpen, Image as ImageIcon } from "lucide-react";
+import { Mail, Printer, Plus, Trash2, ShieldCheck, Save, FolderOpen, Image as ImageIcon, UploadCloud } from "lucide-react";
 import { saveInvoice, deleteInvoice, uploadLogo } from "@/app/actions";
 import SubmitButton from "@/components/SubmitButton";
 
@@ -245,9 +245,15 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
                 </label>
                 <div className="flex items-center space-x-4">
                   {formData.companyLogo && (
-                    <img src={formData.companyLogo} alt="Logo" className="h-12 w-12 object-contain border border-[#1D1D1D]/10 rounded bg-white p-1" />
+                    <img src={formData.companyLogo} alt="Logo" className="h-12 w-12 object-contain border border-[#1D1D1D]/10 rounded bg-white p-1 shadow-sm" />
                   )}
-                  <input type="file" accept="image/*" onChange={handleLogoUpload} className="text-xs" />
+                  <div className="relative flex-1 group">
+                    <input type="file" accept="image/*" onChange={handleLogoUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                    <div className="flex items-center justify-center gap-2 border-2 border-dashed border-[#1D1D1D]/20 group-hover:border-[#FD630A] group-hover:bg-[#FD630A]/5 rounded-lg py-3 transition-all">
+                      <UploadCloud size={18} className="text-[#1D1D1D]/40 group-hover:text-[#FD630A]" />
+                      <span className="text-xs font-bold text-[#1D1D1D]/70 group-hover:text-[#FD630A]">Click or drop to upload logo</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 

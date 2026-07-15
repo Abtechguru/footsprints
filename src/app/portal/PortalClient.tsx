@@ -272,34 +272,37 @@ export default function PortalClient({
     <div className="bg-white rounded-2xl shadow-xl border border-[#1D1D1D]/5 overflow-hidden min-h-[600px] flex flex-col md:flex-row">
       
       {/* Sidebar Panel / Top Nav on Mobile */}
-      <div className="w-full md:w-80 bg-[#1D1D1D] text-white flex flex-col p-4 md:p-6 md:border-r border-[#FD630A]/20 relative overflow-hidden shrink-0">
-        <div className="absolute top-0 left-0 w-32 h-32 bg-[#FD630A] opacity-10 blur-[50px] rounded-full pointer-events-none"></div>
+      <div className="w-full md:w-80 bg-[#1D1D1D] text-white flex flex-col p-6 md:border-r border-[#FD630A]/20 relative overflow-hidden shrink-0 shadow-2xl z-20">
+        <div className="absolute top-[-50px] left-[-50px] w-64 h-64 bg-[#FD630A] opacity-[0.07] blur-[60px] rounded-full pointer-events-none"></div>
+        <div className="absolute bottom-[-50px] right-[-50px] w-64 h-64 bg-[#DAA35D] opacity-[0.05] blur-[60px] rounded-full pointer-events-none"></div>
         
-        <div className="pb-4 md:pb-6 border-b border-white/10 mb-4 md:mb-6 flex justify-between items-center md:block">
+        <div className="pb-6 border-b border-white/10 mb-6 flex justify-between items-center md:block relative z-10">
           <div>
-            <h2 className="text-xl md:text-2xl font-black text-white relative z-10 flex items-center gap-2">
-              <div className="w-2 h-6 bg-[#FD630A] rounded-full"></div>
+            <h2 className="text-xl md:text-2xl font-black text-white flex items-center gap-3">
+              <div className="w-1.5 h-6 bg-gradient-to-b from-[#FD630A] to-[#DAA35D] rounded-full shadow-[0_0_8px_rgba(253,99,10,0.6)]"></div>
               Client Portal
             </h2>
-            <p className="text-white/40 text-[10px] uppercase font-bold tracking-widest mt-2 hidden md:block">Logged In As</p>
-            <p className="text-xs font-medium text-[#FD630A] break-all hidden md:block mt-1">{user.email}</p>
+            <div className="mt-4 hidden md:block bg-white/5 border border-white/10 p-3 rounded-lg">
+              <p className="text-white/40 text-[9px] uppercase font-bold tracking-widest">Logged In As</p>
+              <p className="text-xs font-semibold text-[#FD630A] break-all mt-0.5">{user.email}</p>
+            </div>
           </div>
           <div className="md:hidden">
             <form action={signOutClient}>
-              <button type="submit" className="text-xs font-bold bg-white/10 hover:bg-red-500/20 text-red-400 p-2 rounded-lg transition-colors">
-                <LogOut size={16} />
+              <button type="submit" className="text-xs font-bold bg-white/10 hover:bg-red-500/20 text-red-400 p-2.5 rounded-lg transition-colors">
+                <LogOut size={18} />
               </button>
             </form>
           </div>
         </div>
 
-        <nav className="flex md:flex-col gap-2 md:space-y-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0 snap-x hide-scrollbar">
+        <nav className="flex md:flex-col gap-3 md:space-y-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0 snap-x hide-scrollbar relative z-10">
           <button
             onClick={() => setActiveTab("order")}
-            className={`flex items-center space-x-2 md:space-x-3 px-4 py-3 md:py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center ${
+            className={`flex items-center space-x-3 px-4 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center border ${
               activeTab === "order" 
-                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20" 
-                : "hover:bg-white/5 text-white/60 hover:text-white"
+                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20 border-transparent translate-x-1 md:translate-x-2" 
+                : "bg-white/5 border-white/5 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/10"
             }`}
           >
             <ShoppingBag size={18} />
@@ -308,34 +311,44 @@ export default function PortalClient({
 
           <button
             onClick={() => setActiveTab("orders")}
-            className={`flex items-center space-x-2 md:space-x-3 px-4 py-3 md:py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center ${
+            className={`flex items-center space-x-3 px-4 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center border ${
               activeTab === "orders" 
-                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20" 
-                : "hover:bg-white/5 text-white/60 hover:text-white"
+                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20 border-transparent translate-x-1 md:translate-x-2" 
+                : "bg-white/5 border-white/5 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/10"
             }`}
           >
             <Activity size={18} />
-            <span>My Orders ({ordersList.length})</span>
+            <div className="flex items-center justify-between flex-1">
+              <span>My Orders</span>
+              {ordersList.length > 0 && (
+                <span className="bg-black/20 text-white px-2 py-0.5 rounded-full text-[9px]">{ordersList.length}</span>
+              )}
+            </div>
           </button>
 
           <button
             onClick={() => setActiveTab("invoices")}
-            className={`flex items-center space-x-2 md:space-x-3 px-4 py-3 md:py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center ${
+            className={`flex items-center space-x-3 px-4 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center border ${
               activeTab === "invoices" 
-                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20" 
-                : "hover:bg-white/5 text-white/60 hover:text-white"
+                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20 border-transparent translate-x-1 md:translate-x-2" 
+                : "bg-white/5 border-white/5 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/10"
             }`}
           >
             <FileText size={18} />
-            <span>Invoices ({invoicesList.length})</span>
+            <div className="flex items-center justify-between flex-1">
+              <span>Invoices</span>
+              {invoicesList.length > 0 && (
+                <span className="bg-black/20 text-white px-2 py-0.5 rounded-full text-[9px]">{invoicesList.length}</span>
+              )}
+            </div>
           </button>
 
           <button
             onClick={() => setActiveTab("chat")}
-            className={`flex items-center space-x-2 md:space-x-3 px-4 py-3 md:py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center ${
+            className={`flex items-center space-x-3 px-4 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left whitespace-nowrap snap-center border ${
               activeTab === "chat" 
-                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20" 
-                : "hover:bg-white/5 text-white/60 hover:text-white"
+                ? "bg-gradient-to-r from-[#FD630A] to-[#ff7e33] text-white shadow-lg shadow-[#FD630A]/20 border-transparent translate-x-1 md:translate-x-2" 
+                : "bg-white/5 border-white/5 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/10"
             }`}
           >
             <MessageSquare size={18} />
@@ -343,14 +356,14 @@ export default function PortalClient({
           </button>
         </nav>
 
-        <div className="pt-6 border-t border-white/10 mt-auto hidden md:block">
+        <div className="pt-6 border-t border-white/10 mt-auto hidden md:block relative z-10">
           <form action={signOutClient}>
             <button
               type="submit"
-              className="w-full flex items-center justify-center space-x-2 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider text-red-400 hover:text-red-300 bg-white/5 hover:bg-red-500/10 transition-all border border-white/5 hover:border-red-500/20"
+              className="w-full flex items-center justify-center space-x-2 py-4 rounded-xl font-bold text-[11px] uppercase tracking-wider text-white bg-red-500/10 hover:bg-red-500 transition-colors border border-red-500/20 hover:border-red-500"
             >
               <LogOut size={16} />
-              <span>Log Out Portal</span>
+              <span>Secure Logout</span>
             </button>
           </form>
         </div>
@@ -447,45 +460,47 @@ export default function PortalClient({
                 <p className="text-sm font-medium text-[#1D1D1D]/50">No inquiries placed yet.</p>
               </div>
             ) : (
-              <div className="bg-white border border-[#1D1D1D]/5 rounded-xl overflow-hidden shadow-sm">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-[#F7F3E6] border-b border-[#1D1D1D]/5 text-[#1D1D1D]/60 text-[10px] font-bold uppercase tracking-wider">
-                      <th className="p-4">Date</th>
-                      <th className="p-4">Commodity</th>
-                      <th className="p-4">Requested Quantity</th>
-                      <th className="p-4">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#1D1D1D]/5 text-sm">
-                    {ordersList.map((order) => (
-                      <tr key={order.id} className="hover:bg-[#F7F3E6]/20 transition-colors">
-                        <td className="p-4 font-semibold text-[#1D1D1D]/70">
-                          {formatDate(order.created_at)}
-                        </td>
-                        <td className="p-4 font-bold text-[#1D1D1D]">
-                          {order.product_name}
-                        </td>
-                        <td className="p-4 font-medium text-[#1D1D1D]/70">
-                          {order.quantity}
-                        </td>
-                        <td className="p-4">
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide border ${
-                            order.status === "pending"
-                              ? "bg-amber-50 text-amber-800 border-amber-200"
-                              : order.status === "processing"
-                              ? "bg-blue-50 text-blue-800 border-blue-200"
-                              : order.status === "completed"
-                              ? "bg-green-50 text-green-800 border-green-200"
-                              : "bg-red-50 text-red-800 border-red-200"
-                          }`}>
-                            {order.status}
-                          </span>
-                        </td>
+              <div className="bg-white border border-[#1D1D1D]/5 rounded-xl shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                      <tr className="bg-[#F7F3E6] border-b border-[#1D1D1D]/5 text-[#1D1D1D]/60 text-[10px] font-bold uppercase tracking-wider">
+                        <th className="p-4 whitespace-nowrap">Date</th>
+                        <th className="p-4 whitespace-nowrap">Commodity</th>
+                        <th className="p-4 whitespace-nowrap">Requested Quantity</th>
+                        <th className="p-4 whitespace-nowrap">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-[#1D1D1D]/5 text-sm">
+                      {ordersList.map((order) => (
+                        <tr key={order.id} className="hover:bg-[#F7F3E6]/20 transition-colors">
+                          <td className="p-4 font-semibold text-[#1D1D1D]/70 whitespace-nowrap">
+                            {formatDate(order.created_at)}
+                          </td>
+                          <td className="p-4 font-bold text-[#1D1D1D] whitespace-nowrap">
+                            {order.product_name}
+                          </td>
+                          <td className="p-4 font-medium text-[#1D1D1D]/70 whitespace-nowrap">
+                            {order.quantity}
+                          </td>
+                          <td className="p-4 whitespace-nowrap">
+                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide border ${
+                              order.status === "pending"
+                                ? "bg-amber-50 text-amber-800 border-amber-200"
+                                : order.status === "processing"
+                                ? "bg-blue-50 text-blue-800 border-blue-200"
+                                : order.status === "completed"
+                                ? "bg-green-50 text-green-800 border-green-200"
+                                : "bg-red-50 text-red-800 border-red-200"
+                            }`}>
+                              {order.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
           </div>

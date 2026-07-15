@@ -13,6 +13,8 @@ import ProductsSummary from "@/components/ProductsSummary";
 import Team from "@/components/Team";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
+import WelcomePopup from "@/components/WelcomePopup";
+import FloatingSupport from "@/components/FloatingSupport";
 import { getLandingSettings } from "@/lib/landing-settings-api";
 
 export const revalidate = 0;
@@ -37,6 +39,9 @@ export default async function Home() {
       <Team />
       <Newsletter />
       <Footer settings={settings} />
+      
+      <WelcomePopup />
+      <FloatingSupport settings={settings} />
     </main>
   );
 }
