@@ -463,47 +463,74 @@ export async function deleteReceipt(id: string) {
 }
 
 export async function saveInvoice(invoiceData: any) {
-  const { invoiceNo, clientName, clientAddress, date, items, totalAmount, notes } = invoiceData;
+  const { headerTitle, invoiceNo, clientName, clientAddress, date, items, totalAmount, notes } = invoiceData;
 
-  const { data, error } = await supabaseAdmin.from("invoices").insert([{
+  const headerVal = headerTitle || "PROFORMA INVOICE";
+
+  const payload: any = {
     invoice_no: invoiceNo,
     client_name: clientName,
     client_address: clientAddress,
     date: date,
     items: items,
     total_amount: totalAmount,
-    notes: notes
-  }]).select();
+    notes: notes,
+    header_title: headerVal
+  };
+
+  let { data, error } = await supabaseAdmin.from("invoices").insert([payload]).select();
+
+  // If column doesn't exist in database schema, strip header_title and retry
+  if (error && (error.message?.includes("header_title") || error.code === "PGRST204")) {
+    delete payload.header_title;
+    const retry = await supabaseAdmin.from("invoices").insert([payload]).select();
+    data = retry.data;
+    error = retry.error;
+  }
 
   if (error) {
     console.error(error);
     if (error.code === "23505") {
-      const { data: updateData, error: updateError } = await supabaseAdmin
+      const updatePayload: any = {
+        client_name: clientName,
+        client_address: clientAddress,
+        date: date,
+        items: items,
+        total_amount: totalAmount,
+        notes: notes,
+        header_title: headerVal
+      };
+
+      let { data: updateData, error: updateError } = await supabaseAdmin
         .from("invoices")
-        .update({
-          client_name: clientName,
-          client_address: clientAddress,
-          date: date,
-          items: items,
-          total_amount: totalAmount,
-          notes: notes
-        })
+        .update(updatePayload)
         .eq("invoice_no", invoiceNo)
         .select();
-      
+
+      if (updateError && (updateError.message?.includes("header_title") || updateError.code === "PGRST204")) {
+        delete updatePayload.header_title;
+        const retryUpdate = await supabaseAdmin
+          .from("invoices")
+          .update(updatePayload)
+          .eq("invoice_no", invoiceNo)
+          .select();
+        updateData = retryUpdate.data;
+        updateError = retryUpdate.error;
+      }
+
       if (updateError) {
         console.error(updateError);
         return { success: false, error: updateError.message };
       }
       revalidatePath("/admin/invoices");
-      return { success: true, invoice: updateData[0] };
+      return { success: true, invoice: updateData?.[0] };
     }
 
     return { success: false, error: error.message };
   }
 
   revalidatePath("/admin/invoices");
-  return { success: true, invoice: data[0] };
+  return { success: true, invoice: data?.[0] };
 }
 
 export async function deleteInvoice(id: string) {

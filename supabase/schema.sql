@@ -114,6 +114,7 @@ ON public.receipts FOR ALL USING (auth.jwt() ->> 'role' = 'service_role');
 -- 7. Create Invoices Table
 CREATE TABLE IF NOT EXISTS public.invoices (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    header_title TEXT DEFAULT 'PROFORMA INVOICE',
     invoice_no TEXT UNIQUE NOT NULL,
     client_name TEXT NOT NULL,
     client_address TEXT NOT NULL,

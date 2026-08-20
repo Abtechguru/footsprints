@@ -238,6 +238,7 @@ interface InvoiceData {
   companyContact?: string;
   companyLogo?: string;
   bankDetails?: string;
+  headerTitle?: string;
 }
 
 export default function InvoicePDF({ data }: { data: InvoiceData }) {
@@ -249,6 +250,7 @@ export default function InvoicePDF({ data }: { data: InvoiceData }) {
   };
 
   const cName = data.companyName || "Footprints Energy";
+  const documentTitle = (data.headerTitle || "PROFORMA INVOICE").toUpperCase();
 
   return (
     <Document>
@@ -275,7 +277,7 @@ export default function InvoicePDF({ data }: { data: InvoiceData }) {
         </View>
 
         <View style={styles.titleCenter}>
-          <Text style={styles.proformaTitle}>PROFORMA INVOICE</Text>
+          <Text style={styles.proformaTitle}>{documentTitle}</Text>
         </View>
 
         <View style={styles.invoiceNoBoxContainer}>
@@ -325,7 +327,7 @@ export default function InvoicePDF({ data }: { data: InvoiceData }) {
             <View style={{ ...styles.greenCell, width: '30%', borderRight: 0 }}><Text>{cName}</Text></View>
             <View style={{ ...styles.greenCell, width: '25%', borderRight: 0 }}><Text>{data.clientName}</Text></View>
             <View style={{ ...styles.greenCell, width: '30%', borderRight: 0 }}>
-              <Text>IN ADVANCE, AGAINST PROFORMA INVOICE</Text>
+              <Text>IN ADVANCE, AGAINST {documentTitle}</Text>
             </View>
             <View style={{ ...styles.greenCell, width: '15%' }}>
               <Text>30 DAYS</Text>

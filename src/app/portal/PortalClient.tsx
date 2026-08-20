@@ -525,6 +525,7 @@ export default function PortalClient({
                 {invoicesList.map((invoice) => {
                   // Structure items properly for rendering
                   const invoiceData = {
+                    headerTitle: invoice.header_title || "PROFORMA INVOICE",
                     invoiceNo: invoice.invoice_no,
                     date: invoice.date,
                     clientName: invoice.client_name,
@@ -540,7 +541,7 @@ export default function PortalClient({
                       <div>
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] font-bold bg-[#FD630A]/10 text-[#FD630A] border border-[#FD630A]/20 px-2 py-0.5 rounded uppercase tracking-wider">
-                            Invoice
+                            {invoice.header_title || "Invoice"}
                           </span>
                           <span className="text-xs font-semibold text-[#1D1D1D]/50">
                             {invoice.date}

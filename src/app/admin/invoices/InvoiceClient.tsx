@@ -23,6 +23,7 @@ interface SavedInvoice {
   items: InvoiceItem[];
   total_amount: number;
   notes: string;
+  header_title?: string;
   created_at: string;
 }
 
@@ -31,6 +32,7 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
   const [isClient, setIsClient] = useState(false);
 
   const [formData, setFormData] = useState({
+    headerTitle: "PROFORMA INVOICE",
     invoiceNo: `INV-${Math.floor(1000 + Math.random() * 9000)}`,
     date: new Date().toLocaleDateString("en-US"),
     clientName: "John Doe & Co.",
@@ -105,6 +107,7 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
 
   const getInvoiceData = () => {
     return {
+      headerTitle: formData.headerTitle,
       invoiceNo: formData.invoiceNo,
       clientName: formData.clientName,
       clientAddress: formData.clientAddress,
@@ -150,6 +153,7 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
   const handleLoadInvoice = (inv: SavedInvoice) => {
     setFormData({
       ...formData,
+      headerTitle: inv.header_title || "PROFORMA INVOICE",
       invoiceNo: inv.invoice_no,
       date: inv.date,
       clientName: inv.client_name,
@@ -193,6 +197,7 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
             <button
               onClick={() => {
                 setFormData({
+                  headerTitle: "PROFORMA INVOICE",
                   invoiceNo: `INV-${Math.floor(1000 + Math.random() * 9000)}`,
                   date: new Date().toLocaleDateString("en-US"),
                   clientName: "John Doe & Co.",
@@ -214,6 +219,40 @@ export default function InvoiceClient({ products, initialInvoices, isMasterAdmin
           </div>
 
           <div className="space-y-6">
+            <div className="flex flex-col space-y-2 bg-[#F7F3E6]/40 p-4 rounded-xl border border-[#1D1D1D]/5">
+              <div className="flex justify-between items-center">
+                <label className="text-xs font-bold text-[#1D1D1D] uppercase tracking-wider">Document Header Title</label>
+                <span className="text-[10px] text-[#FD630A] font-bold uppercase">Editable on Editor</span>
+              </div>
+              <input 
+                type="text" 
+                name="headerTitle" 
+                value={formData.headerTitle} 
+                onChange={(e) => handleChange(e)} 
+                placeholder="e.g. PROFORMA INVOICE, COMMERCIAL INVOICE, QUOTATION" 
+                className="border border-[#1D1D1D]/15 rounded-lg px-4 py-2.5 text-sm font-bold text-[#1D1D1D] bg-white focus:outline-none focus:border-[#FD630A] shadow-sm" 
+              />
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {["PROFORMA INVOICE", "COMMERCIAL INVOICE", "TAX INVOICE", "QUOTATION", "OFFICIAL OFFER", "PURCHASE ORDER"].map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => {
+                      setFormData({ ...formData, headerTitle: preset });
+                      setPdfReady(false);
+                    }}
+                    className={`text-[11px] font-bold px-2.5 py-1 rounded-md transition-all ${
+                      formData.headerTitle === preset
+                        ? "bg-[#1D1D1D] text-white shadow-sm"
+                        : "bg-white border border-[#1D1D1D]/10 text-[#1D1D1D]/70 hover:bg-[#FD630A] hover:text-white hover:border-[#FD630A]"
+                    }`}
+                  >
+                    {preset}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col space-y-2">
                 <label className="text-sm font-bold text-[#1D1D1D]/70">Invoice No.</label>
